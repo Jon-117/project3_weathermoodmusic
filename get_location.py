@@ -36,9 +36,11 @@ def format_data(data):
         location = info['display_name'].split(',') # location is used in the UI to display the location to the user.
         if len(location) > 4: # Zip Code can appear between State and Country which this filters out.
             location.remove(location[3])
+        location.remove(location[1])
         lat_and_lon.append(info['lat'])
         lat_and_lon.append(info['lon'])
         location.append(lat_and_lon)
+        print(location)
         places.append(location)
 
     #return "location, lat_and_lon"
