@@ -1,10 +1,10 @@
 """
 Classes for the weather mood project.
 
-Weather, Location, WeatherMood
+Weather, Location, WeatherMood, Menu, Playlist
+
 """
 from dataclasses import dataclass
-
 
 class Menu:
     #TODO - Fill in the rest of this class
@@ -30,15 +30,18 @@ class Weather:
     # Potential methods for interacting with weather APIs
 
 
-@dataclass
+@dataclass 
 class Playlist:
-    song_count: int  # Number of songs in the playlist
-    title: str  # Title of the playlist
-    url: str  # URL to access the playlist
-    image_link: str  # Link to the playlist image
 
+    def __init__(self, song_count, title, url, image_link):
+        self.song_count = song_count
+        self.title = title
+        self.url = url
+        self.image_url = image_link # Link to the playlist image - Useful when flask is implemented
+
+    def pretty_string(self):
+        return f'{self.title} :: {self.song_count} Songs :: {self.url}'
     # Methods for playlist interaction could be added here
-
 
 class Location:
     # Placeholder for location attributes and methods
@@ -70,5 +73,4 @@ class WeatherMood:
         self.playlist_title      = self.playlist.title
         self.playlist_image_link = self.playlist.image_link
         self.playlist_url        = self.playlist.url
-
 
