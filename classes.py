@@ -41,14 +41,10 @@ class Playlist:
 
 
 class Location:
-    # Placeholder for location attributes and methods
-    def __init__(self, city_name, full_name):
+    def __init__(self, city_name, latitude, longitude):
         self.city_name = city_name
-        self.full_name = full_name
-
-    def weather_query_str(self):
-        # Method to return a string suitable for searching weather API
-        return f'{self.city_name}'  # Better to use a manipulation of full_name?
+        self.lat = latitude
+        self.lon = longitude
 
 
 class WeatherMood:
