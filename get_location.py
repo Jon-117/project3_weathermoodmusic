@@ -9,11 +9,10 @@ params = {
     'format': 'json'
 }
 
-def get_location():
+def get_location(userInput):
     """Gather all methods into one in order to create location object. 
     Only needs to call this function to excecute all of them."""
     try:
-        userInput = input('Enter a city: ') #Take out and connect after creating UI
         create_params(userInput)
         returned_data = request_nominatim()
         format_data(returned_data)
@@ -50,8 +49,5 @@ def format_data(data):
         latitude = info['lat'] # Latitude and longitude can be used for openweather to locate the area.
         longitude = info['lon']
         print(city, state, longitude, latitude)
-        location_obj = Location(city, state, latitude, longitude)
-        return location_obj
-              
-    
-get_location()
+        locationObj = Location(city, state, latitude, longitude)
+        return locationObj
