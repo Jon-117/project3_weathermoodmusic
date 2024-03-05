@@ -9,10 +9,12 @@ params = {
     'format': 'json'
 }
 
-def main():
+def get_location():
+    """Gather all methods into one in order to create location object. 
+    Only needs to call this function to excecute all of them."""
     try:
-        userInput = input('Enter a city: ') #Take out and connect with UI
-        get_location(userInput)
+        userInput = input('Enter a city: ') #Take out and connect after creating UI
+        create_params(userInput)
         returned_data = request_nominatim()
         format_data(returned_data)
     except requests.exceptions.HTTPError as e:
@@ -20,9 +22,9 @@ def main():
     except requests.exceptions.RequestException as e:
         print("An error has occurred.", e)
 
-def get_location(userInput):
+def create_params(userInput):
     """ Creates the search string for the api to search"""
-    if userInput.isdigit():
+    if userInput.isdigit(): # Prevents number input
         raise ValueError("Input must be a city name.")
     userInput = userInput
     searchString = f'{userInput}'
@@ -37,19 +39,19 @@ def request_nominatim():
 def format_data(data):
     """ Formats the data by taking 'display_name' and splitting it into [city, county, state, country]
     while filtering out unnecessary info. The location names will be used for display purposes and long and lat will be used for openweather"""
-    places = []
     for info in data:
-        lat_and_lon = [] # Latitude and longitude can be used for openweather to locate the area.
         location = info['display_name'].split(',') # location is used in the UI to display the location to the user.
         if len(location) > 4: # Zip Code can appear between State and Country which this filters out.
             location.remove(location[3])
+        location.remove(location[3])
         location.remove(location[1])
-        lat_and_lon.append(info['lat'])
-        lat_and_lon.append(info['lon'])
-        location.append(lat_and_lon)
-        print(location)
-        places.append(location)
-
+        city = location[0]
+        state = location[1]
+        latitude = info['lat'] # Latitude and longitude can be used for openweather to locate the area.
+        longitude = info['lon']
+        print(city, state, longitude, latitude)
+        location_obj = Location(city, state, latitude, longitude)
+        return location_obj
               
     
-main()
+get_location()
