@@ -2,6 +2,7 @@
 """ Currently when looking up by state only returns the state instead of all cities in the state"""
 import requests
 
+
 params = {
     'city': '',
     'country': 'United States',
@@ -9,14 +10,20 @@ params = {
 }
 
 def main():
-    userInput = input('Enter a city: ') #Take out and connect with UI
-    get_location(userInput)
-    returned_data = request_nominatim()
-    format_data(returned_data)
-
+    try:
+        userInput = input('Enter a city: ') #Take out and connect with UI
+        get_location(userInput)
+        returned_data = request_nominatim()
+        format_data(returned_data)
+    except requests.exceptions.HTTPError as e:
+        print("An HTTP error has occurred.", e)
+    except requests.exceptions.RequestException as e:
+        print("An error has occurred.", e)
 
 def get_location(userInput):
     """ Creates the search string for the api to search"""
+    if userInput.isdigit():
+        raise ValueError("Input must be a city name.")
     userInput = userInput
     searchString = f'{userInput}'
     params.update({'city': searchString})
@@ -43,7 +50,6 @@ def format_data(data):
         print(location)
         places.append(location)
 
-    #return "location, lat_and_lon"
               
     
 main()
