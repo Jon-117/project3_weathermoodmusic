@@ -44,14 +44,11 @@ class Playlist:
     # Methods for playlist interaction could be added here
 
 class Location:
-    # Placeholder for location attributes and methods
-    def __init__(self, city_name, full_name):
+    def __init__(self, city_name, full_name, latitude, longitude):
         self.city_name = city_name
         self.full_name = full_name
-
-    def weather_query_str(self):
-        # Method to return a string suitable for searching weather API
-        return f'{self.city_name}'  # Better to use a manipulation of full_name?
+        self.lat = latitude
+        self.lon = longitude
 
 
 class WeatherMood:
@@ -71,6 +68,6 @@ class WeatherMood:
 
         self.song_count          = self.playlist.song_count
         self.playlist_title      = self.playlist.title
-        self.playlist_image_link = self.playlist.image_link
+        self.playlist_image_link = self.playlist.image_url
         self.playlist_url        = self.playlist.url
 
