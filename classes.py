@@ -65,7 +65,7 @@ class WeatherMood:
 
         self.song_count          = self.playlist.song_count
         self.playlist_title      = self.playlist.title
-        self.playlist_image_link = self.playlist.image_link
+        self.playlist_image_link = self.playlist.image_url
         self.playlist_url        = self.playlist.url
 
 
