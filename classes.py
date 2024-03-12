@@ -61,7 +61,7 @@ class WeatherMood:
 
         # WeatherMood Specific
         self.id = None
-        self.favorite = None
+        self.favorite = False
         self.created_datetime = created_datetime if created_datetime else datetime.now()   # Date created. Doesn't change if it's supplied (ie, when recreating object from db)
         # Location derived
         self.city_name = city_name
