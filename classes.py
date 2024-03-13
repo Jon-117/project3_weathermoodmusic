@@ -5,7 +5,7 @@ Weather, Location, WeatherMood, Menu, Playlist
 
 """
 from dataclasses import dataclass
-from datetime import datetime
+
 
 class Menu:
     #TODO - Fill in the rest of this class
@@ -24,11 +24,19 @@ class Menu:
 
 @dataclass
 class Weather:
-    windspeed: float
-    icon: str  # Icon related to weather conditions. Many freely available.
-    conditions: str  # Weather conditions
-    temp: float
+    windspeed: float  # Represents the wind speed.
+    icon: str  # Represents the icon related to weather conditions.
+    conditions: str  # Represents the weather conditions.
+    temp: float  # Represents the temperature.
     # Potential methods for interacting with weather APIs
+
+    def __init__(self,windspeed,icon,conditions,temp):
+        self.windspeed = windspeed
+        self.icon = icon
+        self.conditions = conditions
+
+    def __str__(self) -> str:
+        return f'Windspeed: {self.windspeed}\nIcon: {self.icon}\nConditions: {self.conditions}\nTemperature: {self.temp}'
 
 
 @dataclass 
@@ -44,6 +52,7 @@ class Playlist:
         return f'{self.title} :: {self.song_count} Songs :: {self.url}'
     # Methods for playlist interaction could be added here
 
+
 class Location:
     def __init__(self, city_name, full_name, latitude, longitude):
         self.city_name = city_name
@@ -53,75 +62,21 @@ class Location:
 
 
 class WeatherMood:
-    """
-    WeatherMood class stores the reminiscence
-    """
-    def __init__(self,
-                 id, favorite, created_datetime,
-                 city_name, full_name, latitude, longitude,
-                 temp, windspeed, icon, conditions,
-                 song_count, playlist_title, playlist_image_url, playlist_url):
+    def __init__(self, location: Location, weather: Weather, playlist: Playlist):
+        self.location = location
+        self.weather = weather
+        self.playlist = playlist
 
-        # WeatherMood Specific
-        self.id = None
-        self.favorite = False
-        self.created_datetime = created_datetime if created_datetime else datetime.now()   # Date created. Doesn't change if it's supplied (ie, when recreating object from db)
-        # Location derived
-        self.city_name = city_name
-        self.full_name = full_name
-        self.latitude = latitude
-        self.longitude = longitude
-        # Weather derived
-        self.temp = temp
-        self.windspeed = windspeed
-        self.icon = icon
-        self.conditions = conditions
-        # Playlist derived
-        self.song_count = song_count
-        self.playlist_title = playlist_title
-        self.playlist_image_url = playlist_image_url
-        self.playlist_url = playlist_url
+        self.city_name = self.location.city_name
+        self.full_name = self.location.full_name
 
-        def display_string() -> str:
-            display_string = f"{conditions.title()} in {self.city_name}... {playlist_title}: {playlist_url}"
-            return display_string
+        self.temp = self.weather.temp
+        self.windspeed = self.weather.windspeed
+        self.icon = self.weather.icon
+        self.conditions = self.weather.conditions
 
-
-class WeatherMoodBuilder:
-    def build(self, location, weather, playlist):
-        # Extracting information from the Location object
-        city_name = location.city_name
-        full_name = location.full_name
-        latitude = location.latitude
-        longitude = location.longitude
-
-        # Extracting information from the Weather object
-        temp = weather.temp
-        windspeed = weather.windspeed
-        icon = weather.icon
-        conditions = weather.conditions
-
-        # Extracting information from the Playlist object
-        song_count = playlist.song_count
-        playlist_title = playlist.playlist_title
-        playlist_image_url = playlist.playlist_image_url
-        playlist_url = playlist.playlist_url
-
-        # Building and returning the WeatherMood object
-        return WeatherMood(
-            id                 = None, # Set after storage in db
-            favorite           = None, # Set after storage in db
-            city_name          = city_name,
-            full_name          = full_name,
-            latitude           = latitude,
-            longitude          = longitude,
-            temp               = temp,
-            windspeed          = windspeed,
-            icon               = icon,
-            conditions         = conditions,
-            song_count         = song_count,
-            playlist_title     = playlist_title,
-            playlist_image_url = playlist_image_url,
-            playlist_url       = playlist_url
-        )
+        self.song_count = self.playlist.song_count
+        self.playlist_title = self.playlist.title
+        self.playlist_image_link = self.playlist.image_url
+        self.playlist_url = self.playlist.url
 
