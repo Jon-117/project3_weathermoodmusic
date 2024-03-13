@@ -34,6 +34,7 @@ class Weather:
         self.windspeed = windspeed
         self.icon = icon
         self.conditions = conditions
+        self.temp = temp
 
     def __str__(self) -> str:
         return f'Windspeed: {self.windspeed}\nIcon: {self.icon}\nConditions: {self.conditions}\nTemperature: {self.temp}'
