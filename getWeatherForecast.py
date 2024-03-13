@@ -5,7 +5,7 @@ from classes import Weather
 
 # Retrieves the OpenWeatherMap API key from the environment variables
 def get_api_key():
-    api_key = os.getenv("OPENWEATHERMAP_API_KEY")
+    api_key = os.getenv("OPENWEATHER_API_KEY")
     if api_key is None:
         print("API key not found. Please set the OPENWEATHER_API_KEY environment variable.")
     return api_key
