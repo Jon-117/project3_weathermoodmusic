@@ -24,11 +24,20 @@ class Menu:
 
 @dataclass
 class Weather:
-    windspeed: float
-    icon: str  # Icon related to weather conditions. Many freely available.
-    conditions: str  # Weather conditions
-    temp: float
+    windspeed: float  # Represents the wind speed.
+    icon: str  # Represents the icon related to weather conditions.
+    conditions: str  # Represents the weather conditions.
+    temp: float  # Represents the temperature.
     # Potential methods for interacting with weather APIs
+
+    def __init__(self,windspeed,icon,conditions,temp):
+        self.windspeed = windspeed
+        self.icon = icon
+        self.conditions = conditions
+        self.temp = temp
+
+    def __str__(self) -> str:
+        return f'Windspeed: {self.windspeed}\nIcon: {self.icon}\nConditions: {self.conditions}\nTemperature: {self.temp}'
 
 
 @dataclass 
