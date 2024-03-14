@@ -4,7 +4,7 @@
 ## General Project Info
 Weathermood works by taking into account the weather and place you're experiencing at a given moment and present you with a playlist of songs to listen to. 
 
-It stores the location, weather, playlist and time so you can come back at any time to relive the experience. 
+It stores the location, weather, playlist and time so you can come back at any date to relive the experience. 
 
 ### Inspirations
 Studies have shown that music and memory are strongly linked. We've all had an experience where we're transported through time when an old song comes on. Scientists behind the study referenced in this 2013 [article](https://www.psychologytoday.com/us/blog/the-athletes-way/201312/why-do-the-songs-your-past-evoke-such-vivid-memories) called the experience *‘music-evoked autobiographical memories’* (***MEAMs***) 
