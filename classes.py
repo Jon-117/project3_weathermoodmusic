@@ -37,6 +37,11 @@ class Menu:
             print(f'{e}')
 
 # TODO - Make a MenuBuilder class
+class MenuBuilder:
+    def builder(self, title: str, subtitle: str, options: dict or list):
+        menu = Menu()
+
+
 
 @dataclass
 class Weather:
