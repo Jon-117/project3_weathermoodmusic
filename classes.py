@@ -118,49 +118,48 @@ class WeatherMood:
             webbrowser.open(self.playlist_url)
 
 
-class WeatherMoodBuilder:
-    def build(self, location, weather, playlist):
-        """
-        Build a Weathermood object from three basic classes location, weather, playlist.
+def build_weathermood_object(location, weather, playlist):
+    """
+    Build a Weathermood object from three basic classes location, weather, playlist.
 
-        Call like this
-        ```
-        weathermood = WeatherMoodBuilder.build(location, weather, playlist)
-        ```
-        """
-        # Extracting information from the Location object
-        city_name = location.city_name
-        full_name = location.full_name
-        latitude = location.latitude
-        longitude = location.longitude
+    Call like this
+    ```
+    weathermood = WeatherMoodBuilder.build(location, weather, playlist)
+    ```
+    """
+    # Extracting information from the Location object
+    city_name = location.city_name
+    full_name = location.full_name
+    latitude = location.latitude
+    longitude = location.longitude
 
-        # Extracting information from the Weather object
-        temp = weather.temp
-        windspeed = weather.windspeed
-        icon = weather.icon
-        conditions = weather.conditions
+    # Extracting information from the Weather object
+    temp = weather.temp
+    windspeed = weather.windspeed
+    icon = weather.icon
+    conditions = weather.conditions
 
-        # Extracting information from the Playlist object
-        song_count = playlist.song_count
-        playlist_title = playlist.playlist_title
-        playlist_image_url = playlist.playlist_image_url
-        playlist_url = playlist.playlist_url
+    # Extracting information from the Playlist object
+    song_count = playlist.song_count
+    playlist_title = playlist.title
+    playlist_image_url = playlist.image_url
+    playlist_url = playlist.url
 
-        # Building and returning the WeatherMood object
-        return WeatherMood(
-            id=None,  # Set after storage in db
-            favorite=None,  # Set after storage in db
-            created_datetime=datetime.now(),  # Set automatically on build
-            city_name=city_name,
-            full_name=full_name,
-            latitude=latitude,
-            longitude=longitude,
-            temp=temp,
-            windspeed=windspeed,
-            icon=icon,
-            conditions=conditions,
-            song_count=song_count,
-            playlist_title=playlist_title,
-            playlist_image_url=playlist_image_url,
-            playlist_url=playlist_url
-        )
+    # Building and returning the WeatherMood object
+    return WeatherMood(
+        id=None,  # Set after storage in db
+        favorite=None,  # Set after storage in db
+        created_datetime=datetime.now(),  # Set automatically on build
+        city_name=city_name,
+        full_name=full_name,
+        latitude=latitude,
+        longitude=longitude,
+        temp=temp,
+        windspeed=windspeed,
+        icon=icon,
+        conditions=conditions,
+        song_count=song_count,
+        playlist_title=playlist_title,
+        playlist_image_url=playlist_image_url,
+        playlist_url=playlist_url
+    )
