@@ -150,7 +150,7 @@ class WeatherMoodBuilder:
         return WeatherMood(
             id=None,  # Set after storage in db
             favorite=None,  # Set after storage in db
-            created_datetime=None,  # Set automatically on build
+            created_datetime=datetime.now(),  # Set automatically on build
             city_name=city_name,
             full_name=full_name,
             latitude=latitude,
