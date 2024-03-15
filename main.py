@@ -9,7 +9,7 @@ from getWeatherForecast import get_weather_forecast
 from spotify_api import search_spotify_playlists
 
 
-def create_new_weathermood(): # Functionally works, just need DB connection to store new WM objects. 
+def create_new_weathermood(): # Functionally works, just need DB connection to store new WM objects.
     """
     Create a new weathermood. Main function for creating a new weathermood, tying all api together.
     """
