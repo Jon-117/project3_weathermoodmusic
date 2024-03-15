@@ -20,7 +20,8 @@ def get_location(user_input):
     try:
         create_params(user_input)
         returned_data = request_nominatim()
-        format_data(returned_data)
+        return format_data(returned_data)
+
     except requests.exceptions.HTTPError as e:
         print("An HTTP error has occurred.", e)
     except requests.exceptions.RequestException as e:
