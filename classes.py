@@ -100,32 +100,34 @@ class WeatherMood:
         self.playlist_image_url = playlist_image_url
         self.playlist_url = playlist_url
 
-        formatted_time = created_datetime.strftime("%B %d, %Y - %I:%M %p")
+    def format_time(self, time)-> str:
+        return time.strftime("%B %d, %Y - %I:%M %p")
 
-        def display_string() -> str:
-            """Moderately format the output string. Contains ugly URL """
-            new_string = f"{conditions.title()} in {self.city_name}. {playlist_title}: {playlist_url}"
-            return new_string
 
-        def pretty_string() -> str:
-            """Pretty string that doesn't have the URL. Use for the option_name when applying the
-            Weathermood.open_link() function to a Menu option"""
-            new_string = (f"{conditions.title()} in {self.city_name} on {formatted_time}. Listening to "
-                          f"{self.playlist_title.title()}")
-            return new_string
+    def display_string(self) -> str:
+        """Moderately format the output string. Contains ugly URL """
+        new_string = f"{self.conditions.title()} in {self.city_name}. {self.playlist_title}: {self.playlist_url}"
+        return new_string
 
-        def open_link(self):
-            webbrowser.open(self.playlist_url)
+    def pretty_string(self) -> str:
+        """Pretty string that doesn't have the URL. Use for the option_name when applying the
+        Weathermood.open_link() function to a Menu option"""
+        conditions = self.conditions
+        city_name = self.city_name
+        formatted_time = self.format_time(self.created_datetime)
+        playlist = self.playlist_title
+
+        new_string = (f"{formatted_time}... {conditions} in {city_name}. Listening to "
+                      f"{playlist}")
+        return new_string
+
+    def open_link(self):
+        webbrowser.open(self.playlist_url)
 
 
 def build_weathermood_object(location, weather, playlist):
     """
     Build a Weathermood object from three basic classes location, weather, playlist.
-
-    Call like this
-    ```
-    weathermood = WeatherMoodBuilder.build(location, weather, playlist)
-    ```
     """
     # Extracting information from the Location object
     city_name = location.city_name
