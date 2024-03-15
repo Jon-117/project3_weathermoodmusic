@@ -58,6 +58,5 @@ def format_data(data):
         # Latitude and longitude can be used for openweather to locate the area.
         latitude = info['lat']
         longitude = info['lon']
-        print(city, state, longitude, latitude)
         location_object = Location(city, state, latitude, longitude)
         return location_object
