@@ -66,8 +66,8 @@ class Location:
     def __init__(self, city_name, full_name, latitude, longitude):
         self.city_name = city_name
         self.full_name = full_name
-        self.lat = latitude
-        self.lon = longitude
+        self.latitude = latitude
+        self.longitude = longitude
 
 
 class WeatherMood:
