@@ -28,7 +28,7 @@ def get_user_input(prompt: str) -> str:
     return user_input
 
 
-def get_selection(menu_options) -> str:
+def get_selection(menu_options):
     indexed_options = {idx + 1: option for idx, option in enumerate(menu_options)}
     for idx, option in indexed_options.items():
         print(f'[{idx}] {option}')
