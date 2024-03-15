@@ -36,11 +36,11 @@ class Menu:
         except Exception as e:
             print(f'{e}')
 
+
 # TODO - Make a MenuBuilder class
 class MenuBuilder:
     def builder(self, title: str, subtitle: str, options: dict or list):
         menu = Menu()
-
 
 
 @dataclass
@@ -50,26 +50,15 @@ class Weather:
     conditions: str  # Represents the weather conditions.
     temp: float  # Represents the temperature.
 
-    # Potential methods for interacting with weather APIs
-
-    def __init__(self, windspeed, icon, conditions, temp):
-        self.windspeed = windspeed
-        self.icon = icon
-        self.conditions = conditions
-        self.temp = temp
-
-    def __str__(self) -> str:
-        return f'Windspeed: {self.windspeed}\nIcon: {self.icon}\nConditions: {self.conditions}\nTemperature: {self.temp}'
-
 
 @dataclass
 class Playlist:
 
-    def __init__(self, song_count, title, url, image_link):
+    def __init__(self, song_count, title, url, image_url):
         self.song_count = song_count
         self.title = title
         self.url = url
-        self.image_url = image_link  # Link to the playlist image - Useful when flask is implemented
+        self.image_url = image_url  # Link to the playlist image - Useful when flask is implemented
 
     def pretty_string(self):
         return f'{self.title} :: {self.song_count} Songs :: {self.url}'
@@ -170,4 +159,3 @@ class WeatherMoodBuilder:
             playlist_image_url=playlist_image_url,
             playlist_url=playlist_url
         )
-
