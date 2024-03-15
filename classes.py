@@ -39,8 +39,8 @@ class Menu:
 
 # TODO - Make a MenuBuilder class
 class MenuBuilder:
-    def build(self, title: str, subtitle: str, options: dict or list):
-        menu = Menu()
+    def build(self, title: str, subtitle: str, options: dict or list, *args, **kwargs):
+        menu = Menu(title, subtitle, options)
 
 
 @dataclass
