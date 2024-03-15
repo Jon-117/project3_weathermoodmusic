@@ -8,12 +8,12 @@ client_secret = os.environ.get('SPOTIFY_WEB_DEV_WEATHERMOOD_SECRET')
 
 
 # Obtain an access token - necessary to access api
-def get_access_token(client_id, client_secret):
+def get_access_token(spotify_id, spotify_secret):
     auth_url = 'https://accounts.spotify.com/api/token'
     auth_response = requests.post(auth_url, {
         'grant_type': 'client_credentials',
-        'client_id': client_id,
-        'client_secret': client_secret,
+        'client_id': spotify_id,
+        'client_secret': spotify_secret,
     })
 
     if auth_response.status_code == 200:
@@ -21,17 +21,18 @@ def get_access_token(client_id, client_secret):
     else:
         return None
 
-def search_spotify_playlists(query, access_token):
+
+def search_spotify_playlists(query, token):
     search_url = 'https://api.spotify.com/v1/search'
     headers = {
-        'Authorization': f'Bearer {access_token}'
+        'Authorization': f'Bearer {token}'
     }
     params = {
         'q': query,
         'type': 'playlist',
         'limit': 1  # Adjust the number of results as needed
     }
-    
+
     response = requests.get(search_url, headers=headers, params=params)
     return response.json()
 
@@ -48,8 +49,6 @@ if access_token:
         print(title, song_count, link)
 else:
     print('Failed to retrieve access token')
-
-
 
 # pprint(results)
 

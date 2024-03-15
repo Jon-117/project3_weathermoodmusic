@@ -6,7 +6,12 @@ import os
 API_KEY = os.environ.get('OPENWEATHER_API_KEY')
 url = 'http://api.openweathermap.org/data/2.5/weather'
 
-params = {'q': 'minneapolis', 'appid': API_KEY, 'units': 'imperial'}
+params = {
+    # 'q': 'minneapolis',
+    'lat': 44.9,
+    'lon': 93.2,
+    'appid': API_KEY,
+    'units': 'imperial'}
 
 response = requests.get(url, params=params)
 data = response.json()
