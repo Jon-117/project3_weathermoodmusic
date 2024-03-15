@@ -39,7 +39,7 @@ class Menu:
 
 # TODO - Make a MenuBuilder class
 class MenuBuilder:
-    def builder(self, title: str, subtitle: str, options: dict or list):
+    def build(self, title: str, subtitle: str, options: dict or list):
         menu = Menu()
 
 
@@ -51,9 +51,7 @@ class Weather:
     temp: float  # Represents the temperature.
 
 
-@dataclass
 class Playlist:
-
     def __init__(self, song_count, title, url, image_url):
         self.song_count = song_count
         self.title = title
@@ -62,7 +60,6 @@ class Playlist:
 
     def pretty_string(self):
         return f'{self.title} :: {self.song_count} Songs :: {self.url}'
-    # Methods for playlist interaction could be added here
 
 
 class Location:
@@ -123,6 +120,14 @@ class WeatherMood:
 
 class WeatherMoodBuilder:
     def build(self, location, weather, playlist):
+        """
+        Build a Weathermood object from three basic classes location, weather, playlist.
+
+        Call like this
+        ```
+        weathermood = WeatherMoodBuilder.build(location, weather, playlist)
+        ```
+        """
         # Extracting information from the Location object
         city_name = location.city_name
         full_name = location.full_name
