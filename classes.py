@@ -8,12 +8,10 @@ from dataclasses import dataclass
 import sqlite3
 import os
 from datetime import datetime
+from pathlib import Path
 
-
-folder = 'database'
-file = 'weatherMood_library.db'
-
-db = os.path.join(folder, file)
+Path("database").mkdir(parents=True, exist_ok=True)
+db = os.path.join('database', 'weatherMood_library.db' )
 
 class Menu:
     #TODO - Fill in the rest of this class
@@ -60,6 +58,8 @@ class Location:
         self.latitude = latitude
         self.longitude = longitude
     # Create method to display location like Playlist class.
+    def pretty_location_string(self):
+        return f'{self.full_name} :: {self.latitude},{self.longitude}'
 
 
 class WeatherMood:
@@ -98,6 +98,12 @@ class WeatherMood:
         display_string = f"{self.conditions.title()} in {self.city_name}... {self.playlist_title}: {self.playlist_url}"
         return display_string
     
+    def add(self):
+        if self.id == True:
+            self.weathermoodlibrary.update_favorite_weatherMood(self)
+        else:
+            self.weathermoodlibrary.add_playlist(self)
+
     def delete(self): 
         """ Can't delete without the 'self' from this class """
         self.weathermoodlibrary.delete_playlist(self)
@@ -126,7 +132,7 @@ class WeatherMoodBuilder:
         # Building and returning the WeatherMood object
         return WeatherMood(
             id                 = None, # Set after storage in db
-            favorite           = None, # Set after storage in db
+            favorite           = 0, # Set after storage in db
             created_datetime   = None,
 
             city_name          = city_name,
@@ -158,7 +164,7 @@ class WeatherMoodLibrary:
     class __WeatherMoodLibrary:
 
         def __init__(self):
-            create_table_sql = 'CREATE TABLE IF NOT EXISTS weatherMood_library (city_name TEXT, full_name TEXT, latitude FLOAT, longitude FLOAT, temp FLOAT, windspeed FLOAT, icon TEXT, conditions TEXT, song_count TEXT, playlist_title TEXT, playlist_image_url TEXT, playlist_url TEXT, created_datetime DATETIME, favorite TINYINT, UNIQUE( full_name COLLATE NOCASE, conditions COLLATE NOCASE ))'
+            create_table_sql = 'CREATE TABLE IF NOT EXISTS weatherMood_library (city_name TEXT, full_name TEXT, latitude FLOAT, longitude FLOAT, temp FLOAT, windspeed FLOAT, icon TEXT, conditions TEXT, song_count TEXT, playlist_title TEXT, playlist_image_url TEXT, playlist_url TEXT, created_datetime DATETIME, favorite BOOLEAN, UNIQUE( full_name COLLATE NOCASE, conditions COLLATE NOCASE ))'
             # Icon will be set as text assuming we save a url or filepath
 
             con = sqlite3.connect(db)
@@ -176,7 +182,6 @@ class WeatherMoodLibrary:
                     res = con.execute(insert_sql, (weatherMood.city_name, weatherMood.full_name, weatherMood.latitude, weatherMood.longitude, weatherMood.temp, weatherMood.windspeed, weatherMood.icon, weatherMood.conditions, weatherMood.song_count, weatherMood.playlist_title, weatherMood.playlist_image_url, weatherMood.playlist_url, weatherMood.created_datetime, weatherMood.favorite))
                     new_id = res.lastrowid # Get the ID of the new row in the table
                     weatherMood.id = new_id
-                    weatherMood.favorite = 0
 
                 # The below code should delete rows if it exceeds a certain amount
                 cursor = con.cursor()
@@ -209,6 +214,20 @@ class WeatherMoodLibrary:
             if deleted_count == 0:
                 raise WeatherMoodErrors(f'Could not find the id. Deletion could not occur.')
 
+        def update_favorite_weatherMood(self, weatherMood):
+            
+            if not weatherMood.id:
+                raise WeatherMoodErrors(f'id does not exist')
+            
+            update_favorite_sql = 'Update weatherMood_library SET favorite = ? WHERE rowid = ?'
+
+            with sqlite3.connect(db) as con:
+                update = con.execute(update_favorite_sql, (weatherMood.favorite, weatherMood.id))
+                rows_changed = update.rowcount
+
+            if rows_changed == 0:
+                raise WeatherMoodErrors(f'WeatherMood id not found')
+
         def delete_all_playlists(self):
             delete_all_sql = 'DELETE FROM weatherMood_library'
 
@@ -239,15 +258,22 @@ class WeatherMoodLibrary:
 
             return playlists
         
-        def display_favorites(self, favorite):
+        def display_favorites(self):
             select_favorites_sql = 'SELECT favorite FROM weatherMood_library WHERE favorite = ?'
             con = sqlite3.connect(db)
             con.row_factory = sqlite3.Row
-            fav_rows = con.execute(select_favorites_sql, (favorite, ))
+            fav_rows = con.execute(select_favorites_sql, (1, ))
             fav_playlists = []
 
             for r in fav_rows:
-                playlist = WeatherMoodLibrary(r['playlist_title'], r['full_name'], r['condition'], r['playlist_url'])
+                playlist = WeatherMoodLibrary(r['rowid'],
+                    r['favorite'], r['created_datetime'],
+                    r['city_name'],r['full_name'],
+                    r['latitude'], r['longitude'],
+                    r['temp'], r['windspeed'], 
+                    r['icon'],r['conditions'],
+                    r['song_count'], r['playlist_title'],
+                    r['playlist_image_url'], r['playlist_url'])
                 fav_playlists.append(playlist)
             con.close()
 
@@ -293,20 +319,17 @@ class WeatherMoodErrors(Exception):
     pass
 
 
-# def main():
-    
 
-# main()
-#Reference for adding data to the database. Also found in 'database_testing'.
-# def main():
-#     place = Location('austin', 'austin, tx', '23.22','-32.24')
-#     playlist = Playlist('3', 'Country', 'https://UrlOfImage.com','https://WeatherMood.com')
-#     weather = Weather('9.9', '12.2', 'https://NotImage.com', 'Thunderstorm')
+# Reference for adding data to the database. Also found in 'database_testing'.
+def main():
+    place = Location('austin', 'austin, tx', '23.22','-32.24')
+    playlist = Playlist('3', 'Country', 'https://UrlOfImage.com','https://WeatherMood.com')
+    weather = Weather('9.9', '12.2', 'https://NotImage.com', 'Thunderstorm')
 
-#     builder = WeatherMoodBuilder()
-#     compiled_data= builder.build(place, weather, playlist)
-#     library = WeatherMoodLibrary()
-#     library.add_playlist(compiled_data)
+    builder = WeatherMoodBuilder()
+    compiled_data= builder.build(place, weather, playlist)
+    library = WeatherMoodLibrary()
+    library.add_playlist(compiled_data)
    
-# main()
+main()
 

@@ -7,24 +7,26 @@ import unittest
 from unittest import TestCase
 
 import sys
-sys.path.append("..") # Necessary to  find 'classes' file
+sys.path.append("..") # Necessary to find 'classes' file
 import classes
 from classes import Weather, Playlist, Location, WeatherMoodBuilder, WeatherMoodLibrary, WeatherMood, WeatherMoodErrors
-
 
 
 class TestWeatherMood_Library(TestCase):
     
     @classmethod
-    def prepDatabase(cls):
-        classes.db = os.path.join('database', 'test_playlists.db')
+    def prepDatabase():
+        from pathlib import Path
+        Path("database").mkdir(parents=True, exist_ok=True)
+
+        classes.db = os.path.join('database', 'TestPlaylists.db')
         WeatherMoodLibrary.instance = None
     
     def clear_database(self):
         library = WeatherMoodLibrary()
         library.delete_all_playlists()
 
-    def add_weatherMood(self):
+    def add_playlist(self):
         builder = WeatherMoodBuilder()
         library = WeatherMoodLibrary()
         
@@ -36,27 +38,28 @@ class TestWeatherMood_Library(TestCase):
         
         library.add_playlist(object)
 
-    def test_display_all(self):
-        library = WeatherMoodLibrary()
-        self.add_weatherMood()
-        weatherMoods = library.list_all_playlists()
-        data = weatherMoods[0]
-        city_name, full_name, latitude, longitude, temp, windspeed, icon, conditions, song_count, playlist_title, playlist_image_url, playlist_url, created_datetime, favorite = data.city_name, data.full_name, data.latitude, data.longitude, data.temp, data.windspeed, data.icon, data.conditions, data.song_count, data.playlist_title, data.playlist_image_url, data.playlist_url, data.created_datetime, data.favorite
-        print(city_name, full_name, latitude, longitude, temp, windspeed, icon, conditions, song_count, playlist_title, playlist_image_url, playlist_url, created_datetime, favorite)
-        #self.clear_database()
+
+    # def test_display_all(self):
+    #     library = WeatherMoodLibrary()
+    #     self.add_playlist()
+    #     weatherMoods = library.list_all_playlists()
+    #     data = weatherMoods[0]
+    #     city_name, full_name, latitude, longitude, temp, windspeed, icon, conditions, song_count, playlist_title, playlist_image_url, playlist_url, created_datetime, favorite = data.city_name, data.full_name, data.latitude, data.longitude, data.temp, data.windspeed, data.icon, data.conditions, data.song_count, data.playlist_title, data.playlist_image_url, data.playlist_url, data.created_datetime, data.favorite
+    #     print(city_name, full_name, latitude, longitude, temp, windspeed, icon, conditions, song_count, playlist_title, playlist_image_url, playlist_url, created_datetime, favorite)
+    #     self.clear_database()
 
     # def test_delete_playlist(self):
     #     # If unittest is ran without 'test_delete_all' it errors after two runs, because it can't properly grab a row.
-    #     self.add_weatherMood()
+    #     self.add_playlist()
     #     library = WeatherMoodLibrary()
     #     playlist_id = 1
     #     returned_data = library.get_playlist_by_id(playlist_id)
     #     returned_data.delete()
 
     # def test_duplicate_error(self):
-    #     self.add_weatherMood()
+    #     self.add_playlist()
     #     with self.assertRaises(WeatherMoodErrors):
-    #         self.add_weatherMood()
+    #         self.add_playlist()
 
     #     self.clear_database()
 
@@ -80,8 +83,23 @@ class TestWeatherMood_Library(TestCase):
 
     #     self.clear_database()
         
-    
-    
+    # def test_favorite(self):
+    #     library = WeatherMoodLibrary()
+
+    #     self.add_playlist()
+    #     #______________________________________ Get object and add or update it
+    #     playlist = library.get_playlist_by_id(1)
+    #     playlist.favorite = 1
+    #     playlist.add()
+    #     #_______________________________________ Grab favorite weather_moods
+    #     weather_mood = library.display_favorites()
+
+    #     city_name, full_name, latitude, longitude, temp, windspeed, icon, conditions, song_count, playlist_title, playlist_image_url, playlist_url, created_datetime, favorite = weather_mood.city_name, weather_mood.full_name, weather_mood.latitude, weather_mood.longitude, weather_mood.temp, weather_mood.windspeed, weather_mood.icon, weather_mood.conditions, weather_mood.song_count, weather_mood.playlist_title, weather_mood.playlist_image_url, weather_mood.playlist_url, weather_mood.created_datetime, weather_mood.favorite
+    #     print(city_name, full_name, latitude, longitude, temp, windspeed, icon, conditions, song_count, playlist_title, playlist_image_url, playlist_url, created_datetime, favorite)
+
+        # self.clear_database()
+
     
 if __name__ == '__main__':
+    TestWeatherMood_Library.prepDatabase()
     unittest.main()
