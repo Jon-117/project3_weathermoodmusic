@@ -8,10 +8,11 @@ from dataclasses import dataclass
 import sqlite3
 import os
 from datetime import datetime
-from pathlib import Path
 
-Path("database").mkdir(parents=True, exist_ok=True)
-db = os.path.join('database', 'weatherMood_library.db' )
+if not os.path.exists('database'):
+    os.makedirs('database')
+file = 'weatherMood_library.db'
+db = os.path.join('database', file)
 
 class Menu:
     #TODO - Fill in the rest of this class
@@ -246,10 +247,10 @@ class WeatherMoodLibrary:
             for r in rows:
                 playlist = WeatherMood(r['rowid'],
                     r['favorite'], r['created_datetime'],
-                    r['city_name'],r['full_name'],
+                    r['city_name'], r['full_name'],
                     r['latitude'], r['longitude'],
                     r['temp'], r['windspeed'], 
-                    r['icon'],r['conditions'],
+                    r['icon'], r['conditions'],
                     r['song_count'], r['playlist_title'],
                     r['playlist_image_url'], r['playlist_url'] )
                 playlists.append(playlist)
@@ -258,15 +259,17 @@ class WeatherMoodLibrary:
 
             return playlists
         
-        def display_favorites(self):
-            select_favorites_sql = 'SELECT favorite FROM weatherMood_library WHERE favorite = ?'
+        def display_favorites(self, fav):
+
+            select_favorites_sql = 'SELECT rowid, * FROM weatherMood_library WHERE favorite = ?'
+            
             con = sqlite3.connect(db)
             con.row_factory = sqlite3.Row
-            fav_rows = con.execute(select_favorites_sql, (1, ))
+            fav_rows = con.execute(select_favorites_sql, (fav, ))
             fav_playlists = []
 
             for r in fav_rows:
-                playlist = WeatherMoodLibrary(r['rowid'],
+                playlist = WeatherMood(r['rowid'],
                     r['favorite'], r['created_datetime'],
                     r['city_name'],r['full_name'],
                     r['latitude'], r['longitude'],
@@ -278,6 +281,16 @@ class WeatherMoodLibrary:
             con.close()
 
             return fav_playlists
+
+        def num_of_weatherMoods(self):
+
+            num_of_weatherMoods_sql = 'SELECT COUNT(*) FROM weatherMood_library'
+
+            con = sqlite3.connect(db)
+            num = con.execute(num_of_weatherMoods_sql)
+            count = num.fetchone()[0]
+
+            return count
 
         def get_playlist_by_id(self, id):
 
@@ -321,15 +334,15 @@ class WeatherMoodErrors(Exception):
 
 
 # Reference for adding data to the database. Also found in 'database_testing'.
-def main():
-    place = Location('austin', 'austin, tx', '23.22','-32.24')
-    playlist = Playlist('3', 'Country', 'https://UrlOfImage.com','https://WeatherMood.com')
-    weather = Weather('9.9', '12.2', 'https://NotImage.com', 'Thunderstorm')
+# def main():
+#     place = Location('austin', 'austin, tx', '23.22','-32.24')
+#     playlist = Playlist('3', 'Country', 'https://UrlOfImage.com','https://WeatherMood.com')
+#     weather = Weather('9.9', '12.2', 'https://NotImage.com', 'Thunderstorm')
 
-    builder = WeatherMoodBuilder()
-    compiled_data= builder.build(place, weather, playlist)
-    library = WeatherMoodLibrary()
-    library.add_playlist(compiled_data)
+#     builder = WeatherMoodBuilder()
+#     compiled_data= builder.build(place, weather, playlist)
+#     library = WeatherMoodLibrary()
+#     library.add_playlist(compiled_data)
    
-main()
+# main()
 
