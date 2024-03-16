@@ -2,7 +2,6 @@
 User Interface:
 Display anything to a user. Get input from a user.
 """
-from classes import Menu
 import subprocess
 import platform
 
@@ -57,18 +56,4 @@ def confirm_choice() -> bool:
             show_message('Please enter Y or N')
 
 
-def show_menu(menu: Menu) -> None:
-    while True:
-        clear_screen()  # Clear the screen before showing the menu
-        show_message(f"{menu.title}\n")
-        show_message(f"{menu.message}\n")
-
-        selection = get_selection(menu.options)
-
-        if selection in menu.options:
-            result = menu.options[selection]()
-            if result == 'exit menu':
-                break
-        else:
-            alert('Please select a valid option.')
 

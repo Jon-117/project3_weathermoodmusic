@@ -9,40 +9,6 @@ from datetime import datetime
 import webbrowser
 
 
-class Menu:
-    def __init__(self, title: str, message: str, options=None):
-        self.title = title
-        self.message = message
-        self.options = options or {}
-
-    def add_option(self, option_name: str, option_function, *args, **kwargs):
-        """
-        Adds options to the menu's dictionary of option functions. Lambda functions are used to preconfigure the
-        functions with params so the functions are not called immediately upon creation of the menu items.
-
-        Note that options showing only strings should still be called this way.
-
-        WeatherMood objects should be shown using ui.show_message"""
-        option_name = option_name.title()
-        option_function = option_function
-        self.options[option_name] = lambda: option_function(*args, **kwargs)
-
-    def remove_option(self, option_name: str):
-        try:
-            if option_name in self.options.keys():
-                del self.options[option_name]
-        except KeyError:
-            print(f'{option_name} is not a valid option. Ensure the option is spelled exactly as it appears.')
-        except Exception as e:
-            print(f'{e}')
-
-
-# TODO - Make a MenuBuilder class
-class MenuBuilder:
-    def build(self, title: str, subtitle: str, options: dict or list, *args, **kwargs):
-        menu = Menu(title, subtitle, options)
-
-
 @dataclass
 class Weather:
     windspeed: float  # Represents the wind speed.
@@ -100,9 +66,8 @@ class WeatherMood:
         self.playlist_image_url = playlist_image_url
         self.playlist_url = playlist_url
 
-    def format_time(self, time)-> str:
-        return time.strftime("%B %d, %Y - %I:%M %p")
-
+    def format_time(self, time) -> str:
+        return datetime.fromtimestamp(time).strftime("%B %d, %Y - %I:%M %p")
 
     def display_string(self) -> str:
         """Moderately format the output string. Contains ugly URL """
@@ -117,12 +82,20 @@ class WeatherMood:
         formatted_time = self.format_time(self.created_datetime)
         playlist = self.playlist_title
 
-        new_string = (f"{formatted_time}... {conditions} in {city_name}. Listening to "
+        new_string = (f"{formatted_time}... {conditions} in {city_name}.\n  Listened to "
                       f"{playlist}")
         return new_string
 
     def open_link(self):
         webbrowser.open(self.playlist_url)
+
+    def weather_mood_object_string(self) -> str:
+        """
+        Returns a string that can be used to recreate the weathermood object in a new file. For creating test data
+        while the db is unavailable.
+        """
+        weathermood_object_string = f"WeatherMood({self.id}, {self.favorite}, {self.created_datetime.timestamp()}, '{self.city_name}', '{self.full_name}', {self.latitude}, {self.longitude}, {self.temp}, {self.windspeed}, '{self.icon}', '{self.conditions}', {self.song_count}, '{self.playlist_title}', '{self.playlist_image_url}', '{self.playlist_url}')"
+        return weathermood_object_string
 
 
 def build_weathermood_object(location, weather, playlist):
