@@ -1,0 +1,11 @@
+requests==2.25.1
+console-menu==0.8.0
+
+
+
+
+# The below command with install all the requirements.
+
+# pip install -r requirements.txt
+
+# Use 'pip freeze' to check if they were properly installed.
