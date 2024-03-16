@@ -14,6 +14,7 @@ if not os.path.exists('database'):
 file = 'weatherMood_library.db'
 db = os.path.join('database', file)
 
+
 class Menu:
     #TODO - Fill in the rest of this class
     def __init__(self):
@@ -31,11 +32,20 @@ class Menu:
 
 @dataclass
 class Weather:
-    windspeed: float
-    icon: str  # Icon related to weather conditions. Many freely available.
-    conditions: str  # Weather conditions
-    temp: float
+    windspeed: float  # Represents the wind speed.
+    icon: str  # Represents the icon related to weather conditions.
+    conditions: str  # Represents the weather conditions.
+    temp: float  # Represents the temperature.
     # Potential methods for interacting with weather APIs
+
+    def __init__(self,windspeed,icon,conditions,temp):
+        self.windspeed = windspeed
+        self.icon = icon
+        self.conditions = conditions
+        self.temp = temp
+
+    def __str__(self) -> str:
+        return f'Windspeed: {self.windspeed}\nIcon: {self.icon}\nConditions: {self.conditions}\nTemperature: {self.temp}'
 
 
 @dataclass 
@@ -110,6 +120,7 @@ class WeatherMood:
         self.weathermoodlibrary.delete_playlist(self)
 
 
+
 class WeatherMoodBuilder:
     def build(self, location, weather, playlist):
         # Extracting information from the Location object
@@ -133,8 +144,10 @@ class WeatherMoodBuilder:
         # Building and returning the WeatherMood object
         return WeatherMood(
             id                 = None, # Set after storage in db
-            favorite           = 0, # Set after storage in db
+
+            favorite           = 0,
             created_datetime   = None,
+
 
             city_name          = city_name,
             full_name          = full_name,
@@ -145,7 +158,7 @@ class WeatherMoodBuilder:
             windspeed          = windspeed,
             icon               = icon,
             conditions         = conditions,
-            
+
             song_count         = song_count,
             playlist_title     = playlist_title,
             playlist_image_url = playlist_image_url,
@@ -332,17 +345,4 @@ class WeatherMoodErrors(Exception):
     pass
 
 
-
-# Reference for adding data to the database. Also found in 'database_testing'.
-# def main():
-#     place = Location('austin', 'austin, tx', '23.22','-32.24')
-#     playlist = Playlist('3', 'Country', 'https://UrlOfImage.com','https://WeatherMood.com')
-#     weather = Weather('9.9', '12.2', 'https://NotImage.com', 'Thunderstorm')
-
-#     builder = WeatherMoodBuilder()
-#     compiled_data= builder.build(place, weather, playlist)
-#     library = WeatherMoodLibrary()
-#     library.add_playlist(compiled_data)
-   
-# main()
 

@@ -1,5 +1,6 @@
 import os
 import requests
+from classes import Weather
 
 
 # Retrieves the OpenWeatherMap API key from the environment variables
@@ -40,10 +41,10 @@ def fetch_weather_data(query_params):
 # like wind speed, weather icon, conditions, and temperature, then returns
 # a tuple containing windspeed, icon, conditions, and temp.
 def parse_forecast_data(forecast_data):
-    windspeed = forecast_data['wind']['speed']
-    icon = forecast_data['weather'][0]['icon']
-    conditions = forecast_data['weather'][0]['main']
-    temp = forecast_data['main']['temp']
+    windspeed = float(forecast_data['wind']['speed'])
+    icon = str(forecast_data['weather'][0]['icon'])
+    conditions = str(forecast_data['weather'][0]['main'])
+    temp = float(forecast_data['main']['temp'])
     return windspeed, icon, conditions, temp
 
 
@@ -55,5 +56,7 @@ def get_weather_forecast(lon, lat):
         query_params = build_query_params(lat, lon, api_key)
         forecast_data = fetch_weather_data(query_params)
         if forecast_data:
-            return parse_forecast_data(forecast_data)
+            windspeed, icon, conditions, temp = parse_forecast_data(forecast_data)
+            weather_object = Weather(windspeed, icon, conditions, temp)
+            return weather_object
     return None
