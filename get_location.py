@@ -4,13 +4,12 @@ Grab location from API based on users input. Currently set up to search for city
 Currently when looking up by state only returns the state instead of all cities in the state
 """
 import requests
-from classes import Location
+from classes import WeatherMoodErrors
 
 params = {
     'city': '',
     'country': 'United States',
     'format': 'json',
-    
 }
 
 def get_location():#user_input
@@ -22,9 +21,8 @@ def get_location():#user_input
         returned_data = request_nominatim()
         check_if_input_city = confirm_data(returned_data)
         if check_if_input_city:
-            actual_cities = format_data(check_if_input_city) # Display options to user
-            display_cities(actual_cities)
-
+            actual_cities = format_data(check_if_input_city) 
+        return actual_cities # Display options to user
     except requests.exceptions.HTTPError as e:
         print("An HTTP error has occurred.", e)
     except requests.exceptions.RequestException as e:
@@ -33,7 +31,7 @@ def get_location():#user_input
 def create_params(user_input):
     """ Creates the search string for the api to search"""
     if user_input.isdigit():  # Prevents number input
-        raise ValueError("Input must be a city name.")
+        raise ValueError("Input must be a city name not numbers.")
     search_string = f'{user_input}'
     params.update({'city': search_string})
 
@@ -52,6 +50,7 @@ def confirm_data(data):
         else:
             data.remove(info)
             print(f"DELETED: {location}, {info['lat']},{info['lon']}, {info['addresstype']}")
+            raise WeatherMoodErrors('AddressType Error: User input is not a city.')
     if len(cities) == 0:
         return False
     else:
@@ -68,6 +67,7 @@ def format_data(check_if_input_city):
         if len(location) == 4:
             location.remove(location[3]) # Removes Country
             location.remove(location[1]) # Removes County
+            
         city = location[0]
         full_name = f'{location[0]},{location[1]}'
         latitude = info['lat']
@@ -82,8 +82,3 @@ def format_data(check_if_input_city):
         formatted_data.append(combine_attributes)
     return formatted_data
 
-def display_cities(cities):
-    for item in cities:
-        print(item['full_name'])
-
-get_location()
