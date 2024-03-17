@@ -9,12 +9,8 @@ import os
 from random import randint
 
 # credentials from the Spotify Developer Dashboard
-client_id = '0f6eda3015cf455d950ec441d581dae6'
-client_secret = '7bec8f809f7e44c18f9a1fd18141920f'
-
-# client_id = os.environ.get('SPOTIFY_WEB_DEV_WEATHERMOOD_ID')
-# client_secret = os.environ.get('SPOTIFY_WEB_DEV_WEATHERMOOD_SECRET')
-
+client_id = os.environ.get('SPOTIFY_WEB_DEV_WEATHERMOOD_ID')
+client_secret = os.environ.get('SPOTIFY_WEB_DEV_WEATHERMOOD_SECRET')
 
 
 # Obtain an access token - necessary to access api

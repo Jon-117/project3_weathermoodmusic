@@ -47,8 +47,8 @@ class WeatherMood:
                  temp, windspeed, icon, conditions,
                  song_count, playlist_title, playlist_image_url, playlist_url):
         # WeatherMood Specific
-        self.id = None
-        self.favorite = False
+        self.id = id
+        self.favorite = favorite
         self.created_datetime = created_datetime if created_datetime else datetime.now()  # Date created. Doesn't change if it's supplied (ie, when recreating object from db)
         # Location derived
         self.city_name = city_name
