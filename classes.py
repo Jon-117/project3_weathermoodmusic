@@ -8,27 +8,12 @@ from dataclasses import dataclass
 import sqlite3
 import os
 from datetime import datetime
+import webbrowser
 
 if not os.path.exists('database'):
     os.makedirs('database')
 file = 'weatherMood_library.db'
 db = os.path.join('database', file)
-
-
-class Menu:
-    #TODO - Fill in the rest of this class
-    def __init__(self):
-        # Initialize menu options here
-        pass
-
-    def add_option(self, option_name, option_function):
-        # Code to add menu option
-        pass
-
-    def remove_option(self, option_name):
-        # Code to remove menu option
-        pass
-
 
 @dataclass
 class Weather:
@@ -36,30 +21,17 @@ class Weather:
     icon: str  # Represents the icon related to weather conditions.
     conditions: str  # Represents the weather conditions.
     temp: float  # Represents the temperature.
-    # Potential methods for interacting with weather APIs
-
-    def __init__(self,windspeed,icon,conditions,temp):
-        self.windspeed = windspeed
-        self.icon = icon
-        self.conditions = conditions
-        self.temp = temp
-
-    def __str__(self) -> str:
-        return f'Windspeed: {self.windspeed}\nIcon: {self.icon}\nConditions: {self.conditions}\nTemperature: {self.temp}'
 
 
-@dataclass 
 class Playlist:
-
-    def __init__(self, song_count, playlist_title, playlist_url, playlist_image_url):
+    def __init__(self, song_count, title, url, image_url):
         self.song_count = song_count
-        self.playlist_title = playlist_title
-        self.playlist_url = playlist_url
-        self.playlist_image_url = playlist_image_url # Link to the playlist image - Useful when flask is implemented
+        self.title = title
+        self.url = url
+        self.image_url = image_url  # Link to the playlist image - Useful when flask is implemented
 
     def pretty_string(self):
         return f'{self.title} :: {self.song_count} Songs :: {self.url}'
-    # Methods for playlist interaction could be added here
 
 
 class Location:
@@ -68,25 +40,22 @@ class Location:
         self.full_name = full_name
         self.latitude = latitude
         self.longitude = longitude
-    # Create method to display location like Playlist class.
-    def pretty_location_string(self):
-        return f'{self.full_name} :: {self.latitude},{self.longitude}'
 
 
 class WeatherMood:
     """
     WeatherMood class stores the reminiscence
     """
+
     def __init__(self,
                  id, favorite, created_datetime,
                  city_name, full_name, latitude, longitude,
                  temp, windspeed, icon, conditions,
                  song_count, playlist_title, playlist_image_url, playlist_url):
-
         # WeatherMood Specific
-        self.id = id
-        self.favorite = favorite
-        self.created_datetime = created_datetime if created_datetime else datetime.now()   # Date created. Doesn't change if it's supplied (ie, when recreating object from db)
+        self.id = None
+        self.favorite = False
+        self.created_datetime = created_datetime if created_datetime else datetime.now()  # Date created. Doesn't change if it's supplied (ie, when recreating object from db)
         # Location derived
         self.city_name = city_name
         self.full_name = full_name
@@ -105,67 +74,96 @@ class WeatherMood:
 
         self.weathermoodlibrary = WeatherMoodLibrary()
 
-    def display_string(self) -> str:
-        display_string = f"{self.conditions.title()} in {self.city_name}... {self.playlist_title}: {self.playlist_url}"
-        return display_string
-    
     def add(self):
         if self.id == True:
             self.weathermoodlibrary.update_favorite_weatherMood(self)
         else:
             self.weathermoodlibrary.add_playlist(self)
 
-    def delete(self): 
+    def delete(self):
         """ Can't delete without the 'self' from this class """
         self.weathermoodlibrary.delete_playlist(self)
 
+    def format_time(self, time) -> str:
+        return datetime.fromtimestamp(time).strftime("%B %d, %Y - %I:%M %p")
+
+    def display_string(self) -> str:
+        """Moderately format the output string. Contains ugly URL """
+        new_string = f"{self.conditions.title()} in {self.city_name}. {self.playlist_title}: {self.playlist_url}"
+        return new_string
+
+    def pretty_string(self) -> str:
+        """Pretty string that doesn't have the URL. Use for the option_name when applying the
+        Weathermood.open_link() function to a Menu option"""
+        conditions = self.conditions
+        city_name = self.city_name
+        formatted_time = self.format_time(self.created_datetime)
+        playlist = self.playlist_title
 
 
-class WeatherMoodBuilder:
-    def build(self, location, weather, playlist):
-        # Extracting information from the Location object
-        city_name = location.city_name
-        full_name = location.full_name
-        latitude = location.latitude
-        longitude = location.longitude
+        new_string = (f"{formatted_time}... {conditions} in {city_name}.\n  Listened to "
+                      f"{playlist}")
+        return new_string
 
-        # Extracting information from the Weather object
-        temp = weather.temp
-        windspeed = weather.windspeed
-        icon = weather.icon
-        conditions = weather.conditions
+    def open_link(self):
+        webbrowser.open(self.playlist_url)
 
-        # Extracting information from the Playlist object
-        song_count = playlist.song_count
-        playlist_title = playlist.playlist_title
-        playlist_image_url = playlist.playlist_image_url
-        playlist_url = playlist.playlist_url
-
-        # Building and returning the WeatherMood object
-        return WeatherMood(
-            id                 = None, # Set after storage in db
-
-            favorite           = 0,
-            created_datetime   = None,
+    def weather_mood_object_string(self) -> str:
+        """
+        Returns a string that can be used to recreate the weathermood object in a new file. For creating test data
+        while the db is unavailable.
+        """
+        weathermood_object_string = f"WeatherMood({self.id}, {self.favorite}, {self.created_datetime.timestamp()}, '{self.city_name}', '{self.full_name}', {self.latitude}, {self.longitude}, {self.temp}, {self.windspeed}, '{self.icon}', '{self.conditions}', {self.song_count}, '{self.playlist_title}', '{self.playlist_image_url}', '{self.playlist_url}')"
+        return weathermood_object_string
 
 
-            city_name          = city_name,
-            full_name          = full_name,
-            latitude           = latitude,
-            longitude          = longitude,
+def build_weathermood_object(location, weather, playlist):
+    """
+    Build a Weathermood object from three basic classes location, weather, playlist.
+    """
+    # Extracting information from the Location object
+    city_name = location.city_name
+    full_name = location.full_name
+    latitude = location.latitude
+    longitude = location.longitude
 
-            temp               = temp,
-            windspeed          = windspeed,
-            icon               = icon,
-            conditions         = conditions,
+    # Extracting information from the Weather object
+    temp = weather.temp
+    windspeed = weather.windspeed
+    icon = weather.icon
+    conditions = weather.conditions
 
-            song_count         = song_count,
-            playlist_title     = playlist_title,
-            playlist_image_url = playlist_image_url,
-            playlist_url       = playlist_url
-        )
+    # Extracting information from the Playlist object
+    song_count = playlist.song_count
+    playlist_title = playlist.title
+    playlist_image_url = playlist.image_url
+    playlist_url = playlist.url
+
+    # Building and returning the WeatherMood object
+    return WeatherMood(
+        # WeatherMood Specific
+        id=None,  # Set after storage in db
+        favorite=0,
+        created_datetime=datetime.now(),  # Set automatically on build
+        # Location Specific
+        city_name=city_name,
+        full_name=full_name,
+        latitude=latitude,
+        longitude=longitude,
+        # Weather Specific
+        temp=temp,
+        windspeed=windspeed,
+        icon=icon,
+        conditions=conditions,
+        # Playlist Specific
+        song_count=song_count,
+        playlist_title=playlist_title,
+        playlist_image_url=playlist_image_url,
+        playlist_url=playlist_url
+    )
 
 
+# ALL BELOW (and db info above) SHOULD BE MOVED TO A NEW DB_MANAGER MODULE
 class WeatherMoodLibrary:
     """ What functions are necessary?
             - Display favorites
@@ -187,7 +185,7 @@ class WeatherMoodLibrary:
                 con.execute(create_table_sql)
 
             con.close()
-        
+
         # We need to create a database entry when a link is accessed
         def add_playlist(self, weatherMood):
             insert_sql = 'INSERT INTO weatherMood_library (city_name, full_name, latitude, longitude, temp, windspeed, icon, conditions, song_count, playlist_title, playlist_image_url, playlist_url, created_datetime, favorite) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
@@ -199,10 +197,10 @@ class WeatherMoodLibrary:
 
                 # The below code should delete rows if it exceeds a certain amount
                 cursor = con.cursor()
-                cursor.execute('SELECT COUNT(*) FROM weatherMood_library') 
+                cursor.execute('SELECT COUNT(*) FROM weatherMood_library')
                 total_row = cursor.fetchone()[0]
 
-                if total_row > 10: 
+                if total_row > 10:
                     excess_row = total_row - 10 # Finds out how many rows are excess
                     delete_rows = excess_row
                     delete_excess_rows = 'DELETE FROM weatherMood_library WHERE rowid IN (SELECT rowid FROM weatherMood_library LIMIT ?)'
@@ -213,7 +211,7 @@ class WeatherMoodLibrary:
                 raise WeatherMoodErrors(f'Error - this weather mood already exists. {weatherMood}') from e
             finally:
                 con.close()
-        
+
         def delete_playlist(self, weatherMood):
 
             if not weatherMood.id:
@@ -229,10 +227,10 @@ class WeatherMoodLibrary:
                 raise WeatherMoodErrors(f'Could not find the id. Deletion could not occur.')
 
         def update_favorite_weatherMood(self, weatherMood):
-            
+
             if not weatherMood.id:
                 raise WeatherMoodErrors(f'id does not exist')
-            
+
             update_favorite_sql = 'Update weatherMood_library SET favorite = ? WHERE rowid = ?'
 
             with sqlite3.connect(db) as con:
@@ -262,7 +260,7 @@ class WeatherMoodLibrary:
                     r['favorite'], r['created_datetime'],
                     r['city_name'], r['full_name'],
                     r['latitude'], r['longitude'],
-                    r['temp'], r['windspeed'], 
+                    r['temp'], r['windspeed'],
                     r['icon'], r['conditions'],
                     r['song_count'], r['playlist_title'],
                     r['playlist_image_url'], r['playlist_url'] )
@@ -271,11 +269,11 @@ class WeatherMoodLibrary:
             con.close()
 
             return playlists
-        
+
         def display_favorites(self, fav):
 
             select_favorites_sql = 'SELECT rowid, * FROM weatherMood_library WHERE favorite = ?'
-            
+
             con = sqlite3.connect(db)
             con.row_factory = sqlite3.Row
             fav_rows = con.execute(select_favorites_sql, (fav, ))
@@ -286,7 +284,7 @@ class WeatherMoodLibrary:
                     r['favorite'], r['created_datetime'],
                     r['city_name'],r['full_name'],
                     r['latitude'], r['longitude'],
-                    r['temp'], r['windspeed'], 
+                    r['temp'], r['windspeed'],
                     r['icon'],r['conditions'],
                     r['song_count'], r['playlist_title'],
                     r['playlist_image_url'], r['playlist_url'])
@@ -321,10 +319,10 @@ class WeatherMoodLibrary:
                     playlist_data['favorite'], playlist_data['created_datetime'],
                     playlist_data['city_name'],playlist_data['full_name'],
                     playlist_data['latitude'], playlist_data['longitude'],
-                    playlist_data['temp'], playlist_data['windspeed'], 
+                    playlist_data['temp'], playlist_data['windspeed'],
                     playlist_data['icon'],playlist_data['conditions'],
                     playlist_data['song_count'], playlist_data['playlist_title'],
-                    playlist_data['playlist_image_url'], playlist_data['playlist_url']  
+                    playlist_data['playlist_image_url'], playlist_data['playlist_url']
                  )
             con.close()
             return playlist

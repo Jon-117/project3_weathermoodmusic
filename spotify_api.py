@@ -6,6 +6,7 @@ import pprint
 from classes import Playlist
 import requests
 import os
+from random import randint
 
 # credentials from the Spotify Developer Dashboard
 client_id = os.environ.get('SPOTIFY_WEB_DEV_WEATHERMOOD_ID')
@@ -42,7 +43,7 @@ def spotify_api_request(query, access_token):
     return response.json()
 
 
-def search_spotify_playlists(query):
+def search_spotify_playlists(query) -> Playlist:
     access_token = get_access_token(client_id, client_secret)
     if access_token:
 
@@ -57,11 +58,10 @@ def search_spotify_playlists(query):
             new_playlist = Playlist(song_count, title, link, image_link)
             playlist_list.append(new_playlist)
             # print(new_playlist.pretty_string())
-        return playlist_list
+        random_pick = randint(0, len(playlist_list) - 1)
+        random_playlist = playlist_list[random_pick]
+        return random_playlist
 
     else:
         print('Failed to retrieve access token')
-
-
-# search_spotify_playlists('tokyo night')
 
