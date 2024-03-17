@@ -110,5 +110,5 @@ if __name__ == "__main__":
     log.basicConfig(level=log.DEBUG,
                         filename='app.log',  # file name
                         filemode='w',  # 'a' for append, 'w' for overwrite
-                        format='%(asctime)s - %(levelname)s - %(message)s')
+                        format='%(asctime)s - %(module)s - %(levelname)s - %(message)s')
     main_menu()
