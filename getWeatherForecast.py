@@ -5,7 +5,7 @@ from classes import Weather
 
 # Retrieves the OpenWeatherMap API key from the environment variables
 def get_api_key():
-    api_key = os.getenv("OPENWEATHER_API_KEY")
+    api_key = os.getenv("OPENWEATHERMAP_API_KEY")
     if api_key is None:
         print("API key not found. Please set the OPENWEATHER_API_KEY environment variable.")
     return api_key
@@ -17,6 +17,7 @@ def build_query_params(lat, lon, api_key):
     return {
         'lat': lat,
         'lon': lon,
+        'units': 'imperial',
         'appid': api_key
     }
 
@@ -50,10 +51,10 @@ def parse_forecast_data(forecast_data):
 
 # The main function that fetches the weather forecast using the OpenWeatherMap API,
 # then returns a tuple with weather information (windspeed, icon, conditions, temp) if successful
-def get_weather_forecast(lon, lat):
+def get_weather_forecast(latitude, longitude):
     api_key = get_api_key()
     if api_key:
-        query_params = build_query_params(lat, lon, api_key)
+        query_params = build_query_params(latitude, longitude, api_key)
         forecast_data = fetch_weather_data(query_params)
         if forecast_data:
             windspeed, icon, conditions, temp = parse_forecast_data(forecast_data)

@@ -9,3 +9,4 @@ console-menu==0.8.0
 # pip install -r requirements.txt
 
 # Use 'pip freeze' to check if they were properly installed.
+geopy~=2.4.1
