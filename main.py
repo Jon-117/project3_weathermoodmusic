@@ -32,7 +32,6 @@ def create_new_weathermood():
     """
     try:
         log.info('Creating a new weathermood...')
-        # TODO - Add validation: No empty strings.
         user_city = ""
         while user_city == "":
             user_city = ui.get_user_input("What city are you in?  ")
@@ -47,7 +46,6 @@ def create_new_weathermood():
         #     log.error('Invalid location. Location object not verified!')
         #     raise get_location_api.LocationError('Location not found. Please try again.')
         log.info(f'Location object created: {location.city_name}: {location.latitude}, {location.longitude}')
-        # Todo - add location verification - currently bad response does not ask for readjustment
         weather = get_weather_forecast(location.latitude, location.longitude)
         spotify_query = f'{user_mood} {weather.conditions} {location.city_name}'
 
