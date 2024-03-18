@@ -1,6 +1,9 @@
 import unittest
+import sys
+sys.path.append("..")
 from unittest.mock import patch
 from getWeatherForecast import get_weather_forecast
+
 
 class TestWeatherAPI(unittest.TestCase):
     @patch('getWeatherForecast.requests.get')
@@ -45,6 +48,7 @@ class TestWeatherAPI(unittest.TestCase):
         self.assertEqual(result.temp, mock_response.json()['main']['temp'])
         self.assertEqual(result.windspeed, mock_response.json()['wind']['speed'])
         self.assertEqual(result.conditions, mock_response.json()['weather'][0]['main'])
+
 
 if __name__ == '__main__':
     unittest.main()
