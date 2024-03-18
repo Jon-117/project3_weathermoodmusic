@@ -52,9 +52,8 @@ class DatabaseManager:
                 playlist_image_url TEXT,
                 playlist_url TEXT,
                 created_datetime DATETIME,
-                favorite TINYINT,
-                UNIQUE(full_name, conditions)
-            );
+                favorite TINYINT
+                );
         '''
         with db_connect() as con:
             log.debug('Creating table weathermood_library')
