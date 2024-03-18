@@ -1,11 +1,12 @@
 """
 Weathermood: A vehicle for nostalgia
 """
-
+import classes
+import get_location_api
 import ui
 from classes import WeatherMood, build_weathermood_object
-from get_location import get_location
-from getWeatherForecast import get_weather_forecast
+from get_location_api import get_location, LocationError
+from get_weather_forcast_api import get_weather_forecast
 from spotify_api import search_spotify_playlists
 from consolemenu import *
 from consolemenu.items import *
@@ -17,36 +18,52 @@ import logging as log
 # TODO - Figure out why the menu isn't refreshing data when making db changes.
 #           (keeps data static from point of app start)
 
+
+def refreshable_menu(func):
+    def wrapper(*args, **kwargs):
+        menu = func(*args, **kwargs)  # Generate the menu
+        menu.show()  # Display the newly generated menu
+    return wrapper
+
+
 def create_new_weathermood():
     """
     Create a new weathermood. Main function for creating a new weathermood, tying all api together.
     """
-    log.info('Creating a new weathermood...')
+    try:
+        log.info('Creating a new weathermood...')
+        # TODO - Add validation: No empty strings.
+        user_city = ""
+        while user_city == "":
+            user_city = ui.get_user_input("What city are you in?  ")
+        user_mood = ""
+        while user_mood == "":
+            user_mood = ui.get_user_input("What's your mood?  ")
+        log.debug(f'User inputs received...\n    City: {user_city}\n    Mood: {user_mood}')
+        log.debug(f'Calling get_location({user_city})')
+        location = get_location(user_city)
+        # UNUSED (Handled in get_location_api.py now)
+        # if not isinstance(location, classes.Location):
+        #     log.error('Invalid location. Location object not verified!')
+        #     raise get_location_api.LocationError('Location not found. Please try again.')
+        log.info(f'Location object created: {location.city_name}: {location.latitude}, {location.longitude}')
+        # Todo - add location verification - currently bad response does not ask for readjustment
+        weather = get_weather_forecast(location.latitude, location.longitude)
+        spotify_query = f'{user_mood} {weather.conditions} {location.city_name}'
 
-    # TODO - Add validation: No empty strings.
-    user_city = ""
-    while user_city == "":
-        user_city = ui.get_user_input("What city are you in?  ")
-    user_mood = ""
-    while user_mood == "":
-        user_mood = ui.get_user_input("What's your mood?  ")
-    log.debug('User inputs received...')
-    log.debug(f'Calling get_location({user_city})')
-    location = get_location(user_city)
-    log.info(f'Location object created: {location.city_name}: {location.latitude}, {location.longitude}')
-    # Todo - add location verification - currently bad response does not ask for readjustment
-    weather = get_weather_forecast(location.latitude, location.longitude)
-    spotify_query = f'{user_mood} {weather.conditions} {location.city_name}'
+        playlist = search_spotify_playlists(spotify_query)
+        # print(isinstance(playlist, Playlist))
 
-    playlist = search_spotify_playlists(spotify_query)
-    # print(isinstance(playlist, Playlist))
-
-    weather_mood = build_weathermood_object(location, weather, playlist)
-    weather_mood.open_link()
-    DatabaseManager.add_weathermood(weather_mood)
-    # print(weather_mood.display_string())
-    # print(weather_mood.weather_mood_object_string())
-
+        weather_mood = build_weathermood_object(location, weather, playlist)
+        weather_mood.open_link()
+        DatabaseManager.add_weathermood(weather_mood)
+        # print(weather_mood.display_string())
+        # print(weather_mood.weather_mood_object_string())
+    except Exception as e:
+        error_message = f'Something went wrong. You can try again. '
+        log.error(e)
+        log.debug(f'Showing error message to user: {error_message}')
+        ui.alert(error_message)
 
 
 def toggle_favorite(wm):
@@ -55,6 +72,7 @@ def toggle_favorite(wm):
 
 def delete_weathermood(wm):
     DatabaseManager.delete_weathermood(wm)
+    return f'Deleted weathermood: {wm.display_string()}'
 
 
 def generate_wm_menu(wm, parent_menu):
@@ -91,8 +109,7 @@ def main_menu():
     past_weathermoods_menu = ConsoleMenu("Past WeatherMoods", exit_option_text='Return to Main Menu')
 
     # Favorites submenu
-    favorite_weathermoods = get_favorite_weathermoods()
-    favorites_submenu = generate_weathermoods_submenu(favorite_weathermoods, "Favorites", past_weathermoods_menu)
+    favorites_submenu = generate_weathermoods_submenu(get_favorite_weathermoods(), "Favorites", past_weathermoods_menu)
     past_weathermoods_menu.append_item(favorites_submenu)
 
     # All objects submenu
@@ -105,10 +122,11 @@ def main_menu():
     menu.show()
 
 
-
 if __name__ == "__main__":
     log.basicConfig(level=log.DEBUG,
-                        filename='app.log',  # file name
-                        filemode='w',  # 'a' for append, 'w' for overwrite
-                        format='%(asctime)s - %(module)s - %(levelname)s - %(message)s')
+                    filename='app.log',  # file name
+                    filemode='w',  # 'a' for append, 'w' for overwrite
+                    format='%(asctime)s - %(module)s - %(levelname)s - %(message)s')
+    # Set-up DB
+    database_manager.DatabaseManager.create_table()
     main_menu()
