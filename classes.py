@@ -35,6 +35,9 @@ class Location:
         self.latitude = latitude
         self.longitude = longitude
 
+    def __str__(self):
+        return f'{self.full_name}'
+
 
 class WeatherMood:
     """
@@ -68,6 +71,9 @@ class WeatherMood:
 
     def format_time(self, time) -> str:
         return datetime.fromtimestamp(time).strftime("%B %d, %Y - %I:%M %p")
+
+    def __str__(self):
+        return f"ID: {self.id} - {self.conditions.title()} in {self.city_name}: {self.playlist_title}"
 
     def display_string(self) -> str:
         """Moderately format the output string. Contains ugly URL """
