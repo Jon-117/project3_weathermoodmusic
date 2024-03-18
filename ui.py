@@ -9,14 +9,6 @@ import logging
 log = logging.getLogger(__name__)
 
 
-def clear_screen():
-    # Check if the operating system is Windows
-    if platform.system() == 'Windows':
-        subprocess.run(['cls'], shell=True, check=True)
-    else:
-        subprocess.run(['clear'], shell=True, check=True)
-
-
 def show_message(message: str) -> None:
     print(message)
 
@@ -106,3 +98,4 @@ def confirm_choice() -> bool:
             return False
         else:
             show_message('Please enter Y or N')
+
