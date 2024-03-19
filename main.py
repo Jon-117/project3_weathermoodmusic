@@ -33,6 +33,7 @@ def create_new_weathermood(selected_location, user_mood):  # Functionally works,
     """
     Create a new weathermood. Main function for creating a new weathermood, tying all api together.
     """
+    library = WeatherMoodLibrary()
     location = selected_location
     city_name, full_name, latitude, longitude = location.city_name, location.full_name, location.latitude, location.longitude
     # Todo - add location verification - currently bad response does not ask for readjustment
@@ -46,6 +47,7 @@ def create_new_weathermood(selected_location, user_mood):  # Functionally works,
     weather_mood = build_weathermood_object(location, weather, playlist)
     weather_mood.open_link()
     # TODO - Store the object in database
+    library.add_playlist(weather_mood) # This should add the 'built' weather mood to the database.
     print(weather_mood.display_string())
     fake_db.append(weather_mood)
     print(weather_mood.weather_mood_object_string())
