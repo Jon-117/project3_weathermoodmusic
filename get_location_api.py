@@ -1,6 +1,4 @@
 """
-Grab location from API based on users input. Currently set up to search for city names based on input only in the United States.
-
 Currently when looking up by state only returns the state instead of all cities in the state
 """
 import requests
@@ -12,11 +10,10 @@ params = {
     'format': 'json',
 }
 
-def get_location():#user_input
+def get_location(user_input):#user_input
     """Gather all methods into one in order to create location object. 
     Only needs to call this function to excecute all of them."""
     try:
-        user_input = input('Enter city here: ')
         create_params(user_input)
         returned_data = request_nominatim()
         check_if_input_city = confirm_data(returned_data)
@@ -67,18 +64,17 @@ def format_data(check_if_input_city):
         if len(location) == 4:
             location.remove(location[3]) # Removes Country
             location.remove(location[1]) # Removes County
-            
+
         city = location[0]
         full_name = f'{location[0]},{location[1]}'
         latitude = info['lat']
         longitude = info['lon']
 
         combine_attributes = {
-            'city': city,
+            'city_name': city,
             'full_name': full_name,
             'latitude': latitude,
             'longitude': longitude
         }
         formatted_data.append(combine_attributes)
     return formatted_data
-
