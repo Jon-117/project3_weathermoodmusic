@@ -9,7 +9,7 @@ from getWeatherForecast import get_weather_forecast
 from spotify_api import search_spotify_playlists
 from consolemenu import *
 from consolemenu.items import *
-import time
+
 
 
 one = WeatherMood(None, 0, 1710555589, 'Moscow', 'Idaho', 46.7323875, -117.000165, 47.25, 4.61, '01n', 'Clear',
@@ -40,8 +40,6 @@ def create_new_weathermood(selected_location, user_mood):  # Functionally works,
     weather = get_weather_forecast(latitude, longitude)
     spotify_query = f"{user_mood} {weather.conditions} {city_name}"
     playlist = search_spotify_playlists(spotify_query)
-    print(playlist)
-    time.sleep(5)
     # print(isinstance(playlist, Playlist))
 
     weather_mood = build_weathermood_object(location, weather, playlist)
