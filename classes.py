@@ -100,7 +100,6 @@ class WeatherMood:
         formatted_time = self.format_time(self.created_datetime)
         playlist = self.playlist_title
 
-
         new_string = (f"{formatted_time}... {conditions} in {city_name}.\n  Listened to "
                       f"{playlist}")
         return new_string
