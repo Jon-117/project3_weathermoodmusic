@@ -10,7 +10,7 @@ params = {
     'format': 'json',
 }
 
-def get_location(user_input):#user_input
+def get_location(user_input):
     """Gather all methods into one in order to create location object. 
     Only needs to call this function to excecute all of them."""
     try:
@@ -19,6 +19,8 @@ def get_location(user_input):#user_input
         check_if_input_city = confirm_data(returned_data)
         if check_if_input_city:
             actual_cities = format_data(check_if_input_city) 
+        else:
+            raise WeatherMoodErrors('AddressType Error: User input is not a city.')
         return actual_cities # Display options to user
     except requests.exceptions.HTTPError as e:
         print("An HTTP error has occurred.", e)
@@ -39,15 +41,15 @@ def request_nominatim():
 
 def confirm_data(data):
     cities = []
+    acceptable_address_type = ['town', 'city']
     for info in data:
         location = info['display_name'].split(',')  # location is used in the UI to display the location to the user.
         #print(f"Before filter: {location} {info['addresstype']}")
-        if info['addresstype'] == 'town' or info['addresstype'] == 'city':
+        if info['addresstype'] in acceptable_address_type:
             cities.append(info)
         else:
             data.remove(info)
             print(f"DELETED: {location}, {info['lat']},{info['lon']}, {info['addresstype']}")
-            raise WeatherMoodErrors('AddressType Error: User input is not a city.')
     if len(cities) == 0:
         return False
     else:
@@ -69,7 +71,7 @@ def format_data(check_if_input_city):
         full_name = f'{location[0]},{location[1]}'
         latitude = info['lat']
         longitude = info['lon']
-
+        print(location)
         combine_attributes = {
             'city_name': city,
             'full_name': full_name,
@@ -78,3 +80,4 @@ def format_data(check_if_input_city):
         }
         formatted_data.append(combine_attributes)
     return formatted_data
+

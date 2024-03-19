@@ -9,7 +9,7 @@ from getWeatherForecast import get_weather_forecast
 from spotify_api import search_spotify_playlists
 from consolemenu import *
 from consolemenu.items import *
-
+import time
 
 
 one = WeatherMood(None, 0, 1710555589, 'Moscow', 'Idaho', 46.7323875, -117.000165, 47.25, 4.61, '01n', 'Clear',
@@ -43,14 +43,11 @@ def create_new_weathermood(selected_location, user_mood):  # Functionally works,
     # print(isinstance(playlist, Playlist))
 
     weather_mood = build_weathermood_object(location, weather, playlist)
-    weather_mood.open_link()
     # TODO - Store the object in database
     library.add_playlist(weather_mood) # This should add the 'built' weather mood to the database.
+    ui.clear_screen()
     print(weather_mood.display_string())
-    fake_db.append(weather_mood)
-    print(weather_mood.weather_mood_object_string())
-    return weather_mood
-    #user_mood = ui.get_user_input("What's your mood?  ") # reposition this. Doesn't fit when selecting location
+    time.sleep(5)
 
 def toggle_favorite(wm):
     wm.favorite = 1 if wm.favorite == 0 else 0
@@ -85,7 +82,7 @@ def get_favorite_weatherMoods_from_db():
 def get_location_input():
     user_city = ui.get_user_input("What city are you in?  ")
     chosen_location = return_location_options(user_city)
-    user_mood = ui.get_user_input("What's your mood? ")
+    user_mood = ui.get_user_input("\nWhat's your mood? ")
     create_new_weathermood(chosen_location, user_mood) 
     
 def return_location_options(user_city):
@@ -97,7 +94,7 @@ def return_location_options(user_city):
             location_full_name = place['full_name']
             print(location_full_name)
             choices.append(location_full_name)
-        selected_location = ui.get_user_input("Select one of the options *Type the name out exactly*: ").title().strip()
+        selected_location = ui.get_user_input("\nSelect one of the options *Type the name out exactly*: ").title().strip()
         if selected_location in choices:
             for place in location:
                 if selected_location in place['full_name']:
@@ -106,17 +103,11 @@ def return_location_options(user_city):
         else:
             raise WeatherMoodErrors("That is not an option. Please enter it exactly as shown.")
 
-    
-
-# For location --------------
-
 
 def main_menu():
     menu = ConsoleMenu("Main Menu", exit_option_text='Exit')
 
-    
     menu.append_item(FunctionItem("Select Location", get_location_input))
-
 
     # Submenu for Past WeatherMoods
     past_weathermoods_menu = ConsoleMenu("Recent WeatherMoods", exit_option_text='Return to Main Menu')
