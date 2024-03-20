@@ -31,16 +31,26 @@ def create_new_weathermood():
     """
     Create a new weathermood. Main function for creating a new weathermood, tying all api together.
     """
+    log.info('Creating a new weathermood...')
+    location_attempt = 0
+    while True:
+        if location_attempt > 3:
+            log.info('Getting location failed. Exiting create_new_weathermood()...')
+            break
+        location_attempt += 1
+        try:
+            user_city = ""
+            while user_city == "":
+                user_city = ui.get_user_input("What city are you in?  ")
+
+            log.debug(f'Calling get_location({user_city})')
+            location = get_location(user_city)
+            log.info(f'Location object created: {location.city_name}: {location.latitude}, {location.longitude}')
+            break
+        except Exception as e:
+            log.debug(f'get_location({user_city}) failed! Trying to get a new city from user attempt {location_attempt} ')
+            continue
     try:
-        log.info('Creating a new weathermood...')
-        user_city = ""
-        while user_city == "":
-            user_city = ui.get_user_input("What city are you in?  ")
-
-        log.debug(f'Calling get_location({user_city})')
-        location = get_location(user_city)
-        log.info(f'Location object created: {location.city_name}: {location.latitude}, {location.longitude}')
-
         user_mood = ""
         while user_mood == "":
             user_mood = ui.get_user_input("\nWhat's your mood?  ")
