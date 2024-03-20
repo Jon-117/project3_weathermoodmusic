@@ -23,6 +23,7 @@ def refreshable_menu(func):
     def wrapper(*args, **kwargs):
         menu = func(*args, **kwargs)  # Generate the menu
         menu.show()  # Display the newly generated menu
+
     return wrapper
 
 
@@ -73,20 +74,30 @@ def delete_weathermood(wm):
     return f'Deleted weathermood: {wm.display_string()}'
 
 
-def generate_wm_menu(wm, parent_menu):
-    wm_menu = ConsoleMenu(f"{wm.display_string()}", exit_option_text='Go Back')
-    wm_menu.append_item(FunctionItem("Open Link", wm.open_link))
-    wm_menu.append_item(FunctionItem("Toggle Favorite/Non-favorite", toggle_favorite, args=[wm]))
-    wm_menu.append_item(FunctionItem("Delete This Weathermood", delete_weathermood, args=[wm]))
-    return SubmenuItem(f"{wm.display_string()}", wm_menu, parent_menu)
+def generate_weathermood_menu(wm, parent_menu):
+    def submenu_func():
+        wm_menu = ConsoleMenu(f"{wm.display_string()}", exit_option_text='Go Back')
+        wm_menu.append_item(FunctionItem("Open Link", wm.open_link))
+        wm_menu.append_item(FunctionItem("Toggle Favorite/Non-favorite", toggle_favorite, args=[wm]))
+        wm_menu.append_item(FunctionItem("Delete This Weathermood", delete_weathermood, args=[wm]))
+
+        wm_menu.show()
+
+    return FunctionItem(f"{wm.display_string()}", submenu_func)
 
 
-def generate_weathermoods_submenu(weathermoods, title, parent_menu):
-    submenu = ConsoleMenu(title, exit_option_text=f'Return to {parent_menu.title}')
-    for wm in weathermoods:
-        wm_submenu_item = generate_wm_menu(wm, submenu)
-        submenu.append_item(wm_submenu_item)
-    return SubmenuItem(title, submenu, parent_menu)
+def generate_weathermoods_submenu(db_call_func, title, parent_menu):
+    log.debug("Generating weathermood submenus... ")
+
+    def submenu_func():
+        submenu = ConsoleMenu(title, exit_option_text=f'Return to {parent_menu.title}')
+        weathermoods = db_call_func()
+        for weathermood in weathermoods:
+            weathermood_submenu_item = generate_weathermood_menu(weathermood, submenu)
+            submenu.append_item(weathermood_submenu_item)
+        submenu.show()
+
+    return FunctionItem(title, submenu_func, menu=parent_menu)
 
 
 def get_favorite_weathermoods():
@@ -107,12 +118,11 @@ def main_menu():
     past_weathermoods_menu = ConsoleMenu("Past WeatherMoods", exit_option_text='Return to Main Menu')
 
     # Favorites submenu
-    favorites_submenu = generate_weathermoods_submenu(get_favorite_weathermoods(), "Favorites", past_weathermoods_menu)
+    favorites_submenu = generate_weathermoods_submenu(get_favorite_weathermoods, "Favorites", past_weathermoods_menu)
     past_weathermoods_menu.append_item(favorites_submenu)
 
     # All objects submenu
-    all_weathermoods = get_all_weathermoods()
-    all_submenu = generate_weathermoods_submenu(all_weathermoods, "All", past_weathermoods_menu)
+    all_submenu = generate_weathermoods_submenu(get_all_weathermoods, "All", past_weathermoods_menu)
     past_weathermoods_menu.append_item(all_submenu)
 
     menu.append_item(SubmenuItem("Past WeatherMoods", past_weathermoods_menu, menu))
