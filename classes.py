@@ -53,8 +53,8 @@ class WeatherMood:
                  temp, windspeed, icon, conditions,
                  song_count, playlist_title, playlist_image_url, playlist_url):
         # WeatherMood Specific
-        self.id = id
-        self.favorite = favorite
+        self.id = None
+        self.favorite = False
         self.created_datetime = created_datetime if created_datetime else datetime.now()  # Date created. Doesn't change if it's supplied (ie, when recreating object from db)
         # Location derived
         self.city_name = city_name
@@ -176,7 +176,7 @@ class WeatherMoodLibrary:
     class __WeatherMoodLibrary:
 
         def __init__(self):
-            create_table_sql = 'CREATE TABLE IF NOT EXISTS weatherMood_library (city_name TEXT, full_name TEXT, latitude FLOAT, longitude FLOAT, temp FLOAT, windspeed FLOAT, icon TEXT, conditions TEXT, song_count TEXT, playlist_title TEXT, playlist_image_url TEXT, playlist_url TEXT, created_datetime DATETIME, favorite BOOLEAN, UNIQUE( full_name COLLATE NOCASE, playlist_url COLLATE NOCASE ))'
+            create_table_sql = 'CREATE TABLE IF NOT EXISTS weatherMood_library (city_name TEXT, full_name TEXT, latitude FLOAT, longitude FLOAT, temp FLOAT, windspeed FLOAT, icon TEXT, conditions TEXT, song_count TEXT, playlist_title TEXT, playlist_image_url TEXT, playlist_url TEXT, created_datetime DATETIME, favorite BOOLEAN, UNIQUE( full_name COLLATE NOCASE, conditions COLLATE NOCASE ))'
             # Icon will be set as text assuming we save a url or filepath
 
             con = sqlite3.connect(db)
