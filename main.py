@@ -27,39 +27,51 @@ def create_new_weathermood():
     """
     Create a new weathermood. Main function for creating a new weathermood, tying all api together.
     """
-    try:
-        log.info('Creating a new weathermood...')
-        user_city = ""
-        while user_city == "":
-            user_city = ui.get_user_input("What city are you in?  ")
+    log.info('Creating a new weathermood...')
+    location_attempt = 0
+    location_success = False
+    while True:
+        if location_attempt >= 3:
+            log.info('Getting location failed. Exiting create_new_weathermood()...')
+            break
+        location_attempt += 1
+        log.debug(f'Attempt #{location_attempt} to get location...')
+        try:
+            user_city = ""
+            while user_city == "":
+                user_city = ui.get_user_input("\nWhat city are you in?  ")
 
-        log.debug(f'Calling get_location({user_city})')    
-        location = get_location(user_city)
-        user_mood = ""
-        while user_mood == "":
-            user_mood = ui.get_user_input("\nWhat's your mood?  ")
-        log.debug(f'User inputs received...\n    City: {user_city}\n    Mood: {user_mood}')
-        # UNUSED (Handled in get_location_api.py now)
-        # if not isinstance(location, classes.Location):
-        #     log.error('Invalid location. Location object not verified!')
-        #     raise get_location_api.LocationError('Location not found. Please try again.')
-        log.info(f'Location object created: {location.city_name}: {location.latitude}, {location.longitude}')
-        weather = get_weather_forecast(location.latitude, location.longitude)
-        spotify_query = f'{user_mood} {weather.conditions} {location.city_name}'
+            log.debug(f'Calling get_location({user_city})')
+            location = get_location(user_city)
+            log.info(f'Location object created: {location.city_name}: {location.latitude}, {location.longitude}')
+            location_success = True
+            break
+        except Exception as e:
+            log.debug(f'get_location({user_city}) failed! \n{e}\nTrying to get a new city from user attempt {location_attempt} ')
+            continue
+    if location_success:
+        try:
+            user_mood = ""
+            while user_mood == "":
+                user_mood = ui.get_user_input("\nWhat's your mood?  ")
+            log.debug(f'User inputs received...\n    City: {user_city}\n    Mood: {user_mood}')
+            weather = get_weather_forecast(location.latitude, location.longitude)
+            spotify_query = f'{user_mood} {weather.conditions} {location.city_name}'
 
-        playlist = search_spotify_playlists(spotify_query)
-        # print(isinstance(playlist, Playlist))
+            playlist = search_spotify_playlists(spotify_query)
 
-        weather_mood = build_weathermood_object(location, weather, playlist)
-        weather_mood.open_link()
-        DatabaseManager.add_weathermood(weather_mood)
-        # print(weather_mood.display_string())
-        # print(weather_mood.weather_mood_object_string())
-    except Exception as e:
-        error_message = f'Something went wrong. You can try again. '
-        log.error(e)
-        log.debug(f'Showing error message to user: {error_message}')
-        ui.alert(error_message)
+            weather_mood = build_weathermood_object(location, weather, playlist)
+            weather_mood.open_link()
+            DatabaseManager.add_weathermood(weather_mood)
+            log.info(weather_mood.weather_mood_object_string())
+        except Exception as e:
+            error_message = f'Something went wrong. You can try again. '
+            log.error(e)
+            log.debug(f'Showing error message to user: {error_message}')
+            ui.alert(error_message)
+    else:
+        ui.get_user_input('\nLocation not found. Press enter to return to main menu...  ')
+
 
 
 def toggle_favorite(wm):
@@ -131,7 +143,7 @@ if __name__ == "__main__":
     log.basicConfig(level=log.DEBUG,
                     filename='app.log',  # file name
                     filemode='w',  # 'a' for append, 'w' for overwrite
-                    format='%(asctime)s - %(module)s - %(levelname)s - %(message)s')
+                    format='%(asctime)s - %(module)s - %(levelname)s - Line %(lineno)d: %(message)s')
     # Set-up DB
     database_manager.DatabaseManager.create_table()
     main_menu()

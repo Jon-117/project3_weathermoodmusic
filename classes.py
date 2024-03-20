@@ -77,7 +77,7 @@ class WeatherMood:
 
     def display_string(self) -> str:
         """Moderately format the output string. Contains ugly URL """
-        new_string = f"ID: {self.id} - {self.conditions.title()} in {self.city_name}. {self.playlist_title}: {self.playlist_url}"
+        new_string = f"{self.conditions.title()} in {self.city_name}. {self.playlist_title}: {self.playlist_url}"
         return new_string
 
     def pretty_string(self) -> str:
