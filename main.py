@@ -15,10 +15,6 @@ from database_manager import DatabaseManager
 import logging as log
 
 
-# TODO - Figure out why the menu isn't refreshing data when making db changes.
-#           (keeps data static from point of app start)
-
-
 def refreshable_menu(func):
     def wrapper(*args, **kwargs):
         menu = func(*args, **kwargs)  # Generate the menu
