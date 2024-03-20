@@ -38,7 +38,7 @@ class DatabaseManager:
         """
         create_table_sql = '''
             CREATE TABLE IF NOT EXISTS weathermood_library (
-                id INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY UNIQUE,
                 city_name TEXT,
                 full_name TEXT,
                 latitude FLOAT,

@@ -7,16 +7,12 @@ import ui
 from classes import WeatherMood, build_weathermood_object
 from get_location_api import get_location, LocationError
 from get_weather_forcast_api import get_weather_forecast
-from spotify_api import search_spotify_playlists
+from get_spotify_api import search_spotify_playlists
 from consolemenu import *
 from consolemenu.items import *
 import database_manager
 from database_manager import DatabaseManager
 import logging as log
-
-
-# TODO - Figure out why the menu isn't refreshing data when making db changes.
-#           (keeps data static from point of app start)
 
 
 def refreshable_menu(func):
