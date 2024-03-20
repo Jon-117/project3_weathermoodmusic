@@ -36,12 +36,13 @@ def create_new_weathermood():
         user_city = ""
         while user_city == "":
             user_city = ui.get_user_input("What city are you in?  ")
+
+        log.debug(f'Calling get_location({user_city})')    
+        location = get_location(user_city)
         user_mood = ""
         while user_mood == "":
-            user_mood = ui.get_user_input("What's your mood?  ")
+            user_mood = ui.get_user_input("\nWhat's your mood?  ")
         log.debug(f'User inputs received...\n    City: {user_city}\n    Mood: {user_mood}')
-        log.debug(f'Calling get_location({user_city})')
-        location = get_location(user_city)
         # UNUSED (Handled in get_location_api.py now)
         # if not isinstance(location, classes.Location):
         #     log.error('Invalid location. Location object not verified!')

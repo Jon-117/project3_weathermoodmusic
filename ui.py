@@ -78,7 +78,7 @@ def get_selection(menu_options: list or dict):
             log.debug('Validating user input for selection... ')
             if user_input in indexed_options:
                 log.debug(f'Selection validated. \nSelected "{user_input}: {indexed_options[user_input]}"')
-                show_message(f'You selected:\n{indexed_options[user_input]}')
+                show_message(f'\nYou selected: {indexed_options[user_input]}')
                 log.debug(f'Returning {indexed_options[user_input]}')
                 return indexed_options[user_input]
             else:

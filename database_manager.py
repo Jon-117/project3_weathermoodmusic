@@ -110,6 +110,20 @@ class DatabaseManager:
                 ui.show_message(f'Error deleting weathermood: \n{e}')
 
     @staticmethod
+    def delete_all_weathermoods():
+        """
+        Delete weathermood from the database
+        """
+        log.debug(f'Deleting all weathermoods')
+        delete_all_sql = f'DELETE FROM weathermood_library'
+        with sqlite3.connect(DB_PATH) as con:
+            try:
+                deleted = con.execute(delete_all_sql)
+                con.close()
+            except sqlite3.Error as e:
+                ui.show_message(f'Error deleting weathermood: \n{e}')
+    
+    @staticmethod
     def list_all_weathermoods():
         """
         List all WeatherMoods.
@@ -188,3 +202,6 @@ class DatabaseManager:
 
 # Create table when module is imported... if it doesn't already exist.
 # DatabaseManager.create_table()
+
+# print(weather_mood.display_string())
+# print(weather_mood.weather_mood_object_string())
