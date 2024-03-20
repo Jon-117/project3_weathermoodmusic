@@ -1,0 +1,127 @@
+2024-03-20 00:01:30,617 - database_manager - DEBUG - Connected to database: database/weathermood_library.db
+2024-03-20 00:01:30,617 - database_manager - DEBUG - Creating table weathermood_library
+2024-03-20 00:01:30,617 - database_manager - DEBUG - Committing changes to database
+2024-03-20 00:01:30,618 - database_manager - DEBUG - Created table weathermood_library
+2024-03-20 00:01:30,618 - database_manager - DEBUG - Yield from database: database/weathermood_library.db
+2024-03-20 00:01:30,618 - database_manager - DEBUG - Closed connection to database: database/weathermood_library.db
+2024-03-20 00:01:30,618 - main - DEBUG - Generating weathermood submenus... 
+2024-03-20 00:01:30,618 - main - DEBUG - Generating weathermood submenus... 
+2024-03-20 00:01:31,634 - main - INFO - Creating a new weathermood...
+2024-03-20 00:01:31,634 - ui - INFO - Getting input from user...
+2024-03-20 00:01:34,497 - main - DEBUG - Calling get_location(minneapolis)
+2024-03-20 00:01:34,497 - get_location_api - DEBUG - Assigning params for minneapolis
+2024-03-20 00:01:34,498 - connectionpool - DEBUG - Starting new HTTPS connection (1): nominatim.openstreetmap.org:443
+2024-03-20 00:01:34,797 - connectionpool - DEBUG - https://nominatim.openstreetmap.org:443 "GET /search?city=minneapolis&country=United+States&format=json HTTP/1.1" 200 911
+2024-03-20 00:01:34,799 - get_location_api - INFO - Creating location objects from supplied json data... 
+2024-03-20 00:01:34,799 - get_location_api - DEBUG - 2 locations in data supplied to `format_data()`
+2024-03-20 00:01:34,799 - get_location_api - DEBUG - Formatted json data successfully. 2 location objects created.
+2024-03-20 00:01:34,799 - ui - INFO - Creating selection options... 
+2024-03-20 00:01:34,799 - ui - INFO - Presenting Option: 1: Minneapolis,  Hennepin County,  Minnesota,  United States 
+2024-03-20 00:01:34,800 - ui - INFO - Presenting Option: 2: Minneapolis,  Ottawa County,  Kansas,  United States 
+2024-03-20 00:01:34,800 - ui - INFO - Getting user input for selection... 
+2024-03-20 00:01:34,800 - ui - INFO - Getting input from user...
+2024-03-20 00:01:35,936 - ui - INFO - User input for selection: 1
+2024-03-20 00:01:35,936 - ui - DEBUG - Validating user input for selection... 
+2024-03-20 00:01:35,937 - ui - DEBUG - Selection validated. 
+Selected "1: Minneapolis,  Hennepin County,  Minnesota,  United States"
+2024-03-20 00:01:35,937 - ui - DEBUG - Returning Minneapolis,  Hennepin County,  Minnesota,  United States
+2024-03-20 00:01:35,937 - ui - INFO - Getting input from user...
+2024-03-20 00:01:40,470 - main - DEBUG - User inputs received...
+    City: minneapolis
+    Mood: happy
+2024-03-20 00:01:40,470 - main - INFO - Location object created: Minneapolis: 44.9772995, -93.2654692
+2024-03-20 00:01:40,472 - connectionpool - DEBUG - Starting new HTTPS connection (1): api.openweathermap.org:443
+2024-03-20 00:01:40,708 - connectionpool - DEBUG - https://api.openweathermap.org:443 "GET /data/2.5/weather?lat=44.9772995&lon=-93.2654692&units=imperial&appid=790f25c09a1e29fe541ca21282c4da40 HTTP/1.1" 200 486
+2024-03-20 00:01:40,710 - connectionpool - DEBUG - Starting new HTTPS connection (1): accounts.spotify.com:443
+2024-03-20 00:01:40,841 - connectionpool - DEBUG - https://accounts.spotify.com:443 "POST /api/token HTTP/1.1" 200 None
+2024-03-20 00:01:40,843 - connectionpool - DEBUG - Starting new HTTPS connection (1): api.spotify.com:443
+2024-03-20 00:01:41,089 - connectionpool - DEBUG - https://api.spotify.com:443 "GET /v1/search?q=happy+Clear+Minneapolis&type=playlist&limit=10 HTTP/1.1" 200 None
+2024-03-20 00:01:41,250 - database_manager - DEBUG - Connected to database: database/weathermood_library.db
+2024-03-20 00:01:41,250 - database_manager - INFO - Adding WeatherMood object to database: ID: None - Clear in Minneapolis. Happy - From "Despicable Me 2" Radio: https://open.spotify.com/playlist/37i9dQZF1E8Rd6Q6TaiAtZ
+2024-03-20 00:01:41,250 - database_manager - DEBUG - Executing SQL for adding object. SQL: 
+            INSERT INTO weathermood_library (
+                city_name, full_name, latitude, longitude, temp, windspeed, 
+                icon, conditions, song_count, playlist_title, 
+                playlist_image_url, playlist_url, created_datetime, favorite
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        
+2024-03-20 00:01:41,251 - database_manager - DEBUG - Assigned 3 to weathermood ID: 3 - Clear in Minneapolis. Happy - From "Despicable Me 2" Radio: https://open.spotify.com/playlist/37i9dQZF1E8Rd6Q6TaiAtZ
+2024-03-20 00:01:41,328 - database_manager - DEBUG - Yield from database: database/weathermood_library.db
+2024-03-20 00:01:41,328 - database_manager - DEBUG - Closed connection to database: database/weathermood_library.db
+2024-03-20 00:01:48,432 - database_manager - DEBUG - Connected to database: database/weathermood_library.db
+2024-03-20 00:01:48,432 - database_manager - DEBUG - Creating WeatherMood object from row with id 1
+2024-03-20 00:01:48,432 - database_manager - DEBUG - Creating WeatherMood object from row with id 2
+2024-03-20 00:01:48,432 - database_manager - DEBUG - Creating WeatherMood object from row with id 3
+2024-03-20 00:01:48,432 - database_manager - DEBUG - Yield from database: database/weathermood_library.db
+2024-03-20 00:01:48,432 - database_manager - DEBUG - Closed connection to database: database/weathermood_library.db
+2024-03-20 00:02:06,520 - database_manager - DEBUG - Deleting weathermood: ID: 3 - Clear in Minneapolis: Happy - From "Despicable Me 2" Radio
+2024-03-20 00:02:06,520 - database_manager - DEBUG - Connected to database: database/weathermood_library.db
+2024-03-20 00:02:06,520 - database_manager - DEBUG - Executing SQL for deleting object (id: 3). SQL: DELETE FROM weathermood_library WHERE id = ?
+2024-03-20 00:02:06,593 - database_manager - DEBUG - Yield from database: database/weathermood_library.db
+2024-03-20 00:02:06,593 - database_manager - DEBUG - Closed connection to database: database/weathermood_library.db
+2024-03-20 00:02:09,997 - database_manager - DEBUG - Connected to database: database/weathermood_library.db
+2024-03-20 00:02:09,997 - database_manager - DEBUG - Creating WeatherMood object from row with id 1
+2024-03-20 00:02:09,997 - database_manager - DEBUG - Creating WeatherMood object from row with id 2
+2024-03-20 00:02:09,997 - database_manager - DEBUG - Yield from database: database/weathermood_library.db
+2024-03-20 00:02:09,997 - database_manager - DEBUG - Closed connection to database: database/weathermood_library.db
+2024-03-20 00:02:32,319 - database_manager - DEBUG - Connected to database: database/weathermood_library.db
+2024-03-20 00:02:32,400 - database_manager - DEBUG - Yield from database: database/weathermood_library.db
+2024-03-20 00:02:32,401 - database_manager - DEBUG - Closed connection to database: database/weathermood_library.db
+2024-03-20 00:02:35,863 - database_manager - DEBUG - Connected to database: database/weathermood_library.db
+2024-03-20 00:02:35,863 - database_manager - DEBUG - Creating WeatherMood object from row with id 1
+2024-03-20 00:02:35,863 - database_manager - DEBUG - Yield from database: database/weathermood_library.db
+2024-03-20 00:02:35,864 - database_manager - DEBUG - Closed connection to database: database/weathermood_library.db
+2024-03-20 00:02:44,430 - database_manager - DEBUG - Connected to database: database/weathermood_library.db
+2024-03-20 00:02:44,430 - database_manager - DEBUG - Creating WeatherMood object from row with id 1
+2024-03-20 00:02:44,430 - database_manager - DEBUG - Creating WeatherMood object from row with id 2
+2024-03-20 00:02:44,430 - database_manager - DEBUG - Yield from database: database/weathermood_library.db
+2024-03-20 00:02:44,430 - database_manager - DEBUG - Closed connection to database: database/weathermood_library.db
+2024-03-20 00:03:01,018 - main - INFO - Creating a new weathermood...
+2024-03-20 00:03:01,018 - ui - INFO - Getting input from user...
+2024-03-20 00:03:03,154 - main - DEBUG - Calling get_location(austin)
+2024-03-20 00:03:03,154 - get_location_api - DEBUG - Assigning params for austin
+2024-03-20 00:03:03,155 - connectionpool - DEBUG - Starting new HTTPS connection (1): nominatim.openstreetmap.org:443
+2024-03-20 00:03:03,528 - connectionpool - DEBUG - https://nominatim.openstreetmap.org:443 "GET /search?city=austin&country=United+States&format=json HTTP/1.1" 200 4049
+2024-03-20 00:03:03,529 - get_location_api - INFO - Creating location objects from supplied json data... 
+2024-03-20 00:03:03,529 - get_location_api - DEBUG - 3 locations in data supplied to `format_data()`
+2024-03-20 00:03:03,529 - get_location_api - DEBUG - Formatted json data successfully. 3 location objects created.
+2024-03-20 00:03:03,529 - ui - INFO - Creating selection options... 
+2024-03-20 00:03:03,529 - ui - INFO - Presenting Option: 1: Austin,  Travis County,  Texas,  United States 
+2024-03-20 00:03:03,529 - ui - INFO - Presenting Option: 2: Austin,  Mower County,  Minnesota,  United States 
+2024-03-20 00:03:03,529 - ui - INFO - Presenting Option: 3: Austin,  Scott County,  Indiana,  United States 
+2024-03-20 00:03:03,529 - ui - INFO - Getting user input for selection... 
+2024-03-20 00:03:03,529 - ui - INFO - Getting input from user...
+2024-03-20 00:03:05,811 - ui - INFO - User input for selection: 3
+2024-03-20 00:03:05,811 - ui - DEBUG - Validating user input for selection... 
+2024-03-20 00:03:05,811 - ui - DEBUG - Selection validated. 
+Selected "3: Austin,  Scott County,  Indiana,  United States"
+2024-03-20 00:03:05,811 - ui - DEBUG - Returning Austin,  Scott County,  Indiana,  United States
+2024-03-20 00:03:05,811 - ui - INFO - Getting input from user...
+2024-03-20 00:03:14,191 - main - DEBUG - User inputs received...
+    City: austin
+    Mood: Classy
+2024-03-20 00:03:14,191 - main - INFO - Location object created: Austin: 38.740661, -85.81392401689178
+2024-03-20 00:03:14,192 - connectionpool - DEBUG - Starting new HTTPS connection (1): api.openweathermap.org:443
+2024-03-20 00:03:14,544 - connectionpool - DEBUG - https://api.openweathermap.org:443 "GET /data/2.5/weather?lat=38.740661&lon=-85.81392401689178&units=imperial&appid=790f25c09a1e29fe541ca21282c4da40 HTTP/1.1" 200 516
+2024-03-20 00:03:14,551 - connectionpool - DEBUG - Starting new HTTPS connection (1): accounts.spotify.com:443
+2024-03-20 00:03:14,708 - connectionpool - DEBUG - https://accounts.spotify.com:443 "POST /api/token HTTP/1.1" 200 None
+2024-03-20 00:03:14,710 - connectionpool - DEBUG - Starting new HTTPS connection (1): api.spotify.com:443
+2024-03-20 00:03:14,981 - connectionpool - DEBUG - https://api.spotify.com:443 "GET /v1/search?q=Classy+Clear+Austin&type=playlist&limit=10 HTTP/1.1" 200 None
+2024-03-20 00:03:15,052 - database_manager - DEBUG - Connected to database: database/weathermood_library.db
+2024-03-20 00:03:15,052 - database_manager - INFO - Adding WeatherMood object to database: ID: None - Clear in Austin. Classy Mix: https://open.spotify.com/playlist/37i9dQZF1EIdfwjO1J3ykJ
+2024-03-20 00:03:15,052 - database_manager - DEBUG - Executing SQL for adding object. SQL: 
+            INSERT INTO weathermood_library (
+                city_name, full_name, latitude, longitude, temp, windspeed, 
+                icon, conditions, song_count, playlist_title, 
+                playlist_image_url, playlist_url, created_datetime, favorite
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        
+2024-03-20 00:03:15,053 - database_manager - DEBUG - Assigned 3 to weathermood ID: 3 - Clear in Austin. Classy Mix: https://open.spotify.com/playlist/37i9dQZF1EIdfwjO1J3ykJ
+2024-03-20 00:03:15,132 - database_manager - DEBUG - Yield from database: database/weathermood_library.db
+2024-03-20 00:03:15,132 - database_manager - DEBUG - Closed connection to database: database/weathermood_library.db
+2024-03-20 00:03:18,836 - database_manager - DEBUG - Connected to database: database/weathermood_library.db
+2024-03-20 00:03:18,836 - database_manager - DEBUG - Creating WeatherMood object from row with id 1
+2024-03-20 00:03:18,836 - database_manager - DEBUG - Creating WeatherMood object from row with id 2
+2024-03-20 00:03:18,836 - database_manager - DEBUG - Creating WeatherMood object from row with id 3
+2024-03-20 00:03:18,836 - database_manager - DEBUG - Yield from database: database/weathermood_library.db
+2024-03-20 00:03:18,836 - database_manager - DEBUG - Closed connection to database: database/weathermood_library.db
