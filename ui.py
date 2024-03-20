@@ -2,8 +2,7 @@
 User Interface:
 Display anything to a user. Get input from a user.
 """
-import subprocess
-import platform
+
 import logging
 
 log = logging.getLogger(__name__)
@@ -88,14 +87,4 @@ def get_selection(menu_options: list or dict):
         except ValueError:
             alert('Please enter a valid number.')
 
-
-def confirm_choice() -> bool:
-    while True:
-        user_input = get_user_input('Are you sure? (Y/N): ').strip().upper()
-        if user_input == 'Y':
-            return True
-        elif user_input == 'N':
-            return False
-        else:
-            show_message('Please enter Y or N')
 
