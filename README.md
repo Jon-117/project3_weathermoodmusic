@@ -46,6 +46,38 @@ Save the information in Environment Variables as follows:
 |Spotify client_id|SPOTIFY_WEB_DEV_WEATHERMOOD_ID|
 |Spotify client_secret|SPOTIFY_WEB_DEV_WEATHERMOOD_SECRET|
 
+### Dependencies
+Openning the project directory in your terminal and running the below command with install all the requirements.
+`pip install -r requirements.txt`
+
 ## Later Hopes
 - Add option to also allow a user to write a note at the time of creation, further assisting in memory recall
 - Moving the program to a flask webapp
+
+---
+
+# Using the program
+In your terminal you have the option to immediately create a new weathermood object. 
+![image](https://github.com/Jon-117/project3_weathermoodmusic/assets/38222965/d41a5ab9-2e8a-430b-86ae-3887d8aff216)
+
+Creating the weathermood starts with entering your current city, selecting an option if more than one city exists with the same name, and finally entering a mood. 
+![image](https://github.com/Jon-117/project3_weathermoodmusic/assets/38222965/0555a424-a429-4053-9f15-ede2b16e715c)
+
+Immediately upon creation, the program will open Spotify in either your browser or the Spotify desktop application if you have it installed. 
+![image](https://github.com/Jon-117/project3_weathermoodmusic/assets/38222965/b21f5cad-932b-4c6a-b339-3d5bce954d42)
+
+The application returns to the main menu, and you're able to look at weathermoods created in the past. 
+![image](https://github.com/Jon-117/project3_weathermoodmusic/assets/38222965/0b9359da-4287-419a-91dd-28ba66af2b21)
+
+Favorite options are toggleable, so you can look at only your favorites if you'd like. 
+![image](https://github.com/Jon-117/project3_weathermoodmusic/assets/38222965/a0af6876-ae78-45c3-8d06-206dba3a394f)
+![image](https://github.com/Jon-117/project3_weathermoodmusic/assets/38222965/7ca92bfd-16f3-4e8f-acc8-e50c6349b2cd)
+
+Or look at all past created weathermoods.
+![image](https://github.com/Jon-117/project3_weathermoodmusic/assets/38222965/54967c6f-6964-4d31-8035-f06c6f0b0a6d)
+
+You can open the playlist again, toggle the favorite status, or delete the weathermood whether you open it from Favorites or All
+![image](https://github.com/Jon-117/project3_weathermoodmusic/assets/38222965/3036cc0c-a151-4839-8106-2aeba5acab9c)
+
+Unfortunately, current limitations with the console-menu package require us to fully back out of a menu (or submenu) and then re-enter it to see changes made. This means that after interacting with a weathermood you'll have to fully back out of the menu which displays them to see changes. We were unable to create a function to refresh a menu when moving backwards through the menus. It may be possible with another package such as curses, but we weren't able to pivot quick enough to implement this. 
+
