@@ -1,20 +1,19 @@
 import requests
 from pprint import pprint
+import unittest
+
 
 params = {
     'q': 'minneapolis',
     'format': 'json'
 }
+response = requests.get('https://nominatim.openstreetmap.org/search', params=params)
+data = response.json()
 
-
-def test():
-    response = requests.get('https://nominatim.openstreetmap.org/search', params=params)
-    data = response.json()
+def test_minneapolis():
     for result in data:
-        name = result['name']
-        # print(name)
-
-    pprint(data)
+        name = result['display_name']
+        print(name)
 
 test()
 

@@ -51,6 +51,7 @@ def create_new_weathermood(selected_location, user_mood):  # Functionally works,
 
 def toggle_favorite(wm):
     wm.favorite = 1 if wm.favorite == 0 else 0
+    WeatherMoodLibrary.update_favotite_weatherMood(wm)
     # Update the database
 
 def generate_wm_menu(wm, parent_menu):
