@@ -92,6 +92,24 @@ class DatabaseManager:
             con.close()
 
     @staticmethod
+    def update_weathermood(weathermood):
+
+        update_sql = """Update weathermood_library SET 
+        city_name = ?, full_name = ?, latitude = ?, longitude = ?,
+          temp = ?, windspeed = ?, icon = ?, conditions = ?, song_count = ?, 
+          playlist_title = ?, playlist_image_url = ?, playlist_url = ?, 
+          created_datetime = ?, favorite = ?"""
+
+        with db_connect() as con:
+            con.execute(update_sql, (
+                weathermood.city_name, weathermood.full_name, weathermood.latitude,
+                weathermood.longitude, weathermood.temp, weathermood.windspeed,
+                weathermood.icon, weathermood.conditions, weathermood.song_count,
+                weathermood.playlist_title, weathermood.playlist_image_url,
+                weathermood.playlist_url, weathermood.created_datetime, weathermood.favorite))
+            
+
+    @staticmethod
     def delete_weathermood(weathermood):
         """
         Delete weathermood from the database
@@ -110,6 +128,17 @@ class DatabaseManager:
                 ui.show_message(f'Error deleting weathermood: \n{e}')
 
     @staticmethod
+    def num_of_weathermoods():
+        weathermood_count_sql = 'SELECT COUNT(*) FROM weathermood_library'
+
+        con = sqlite3.connect(DB_PATH)
+        count = con.execute(weathermood_count_sql)
+        amount = count.fetchone()[0]
+
+        con.close()
+        return amount
+
+    @staticmethod
     def delete_all_weathermoods():
         """
         Delete weathermood from the database
@@ -119,7 +148,6 @@ class DatabaseManager:
         with sqlite3.connect(DB_PATH) as con:
             try:
                 deleted = con.execute(delete_all_sql)
-                con.close()
             except sqlite3.Error as e:
                 ui.show_message(f'Error deleting weathermood: \n{e}')
     
@@ -154,12 +182,33 @@ class DatabaseManager:
             return favorites
 
     @staticmethod
+    def get_weathermood_by_id(id):
+        get_weathermood_id_sql = 'SELECT rowid, * FROM weathermood_library WHERE rowid = ?'
+        con = sqlite3.connect(DB_PATH)
+        con.row_factory = sqlite3.Row
+        rows = con.execute(get_weathermood_id_sql, (id,))
+        row_data = rows.fetchone()
+
+        if row_data:
+            weathermood = WeatherMood(id=row_data['id'],
+            favorite=bool(row_data['favorite']),created_datetime=row_data['created_datetime'],
+            city_name=row_data['city_name'],full_name=row_data['full_name'],
+            latitude=row_data['latitude'],longitude=row_data['longitude'],
+            temp=row_data['temp'],windspeed=row_data['windspeed'],
+            icon=row_data['icon'],conditions=row_data['conditions'],
+            song_count=row_data['song_count'],playlist_title=row_data['playlist_title'],
+            playlist_image_url=row_data['playlist_image_url'],playlist_url=row_data['playlist_url'])
+
+            con.close()
+            return weathermood
+
+    @staticmethod
     def row_to_weathermood(row):
         """
         Convert a db row object to a WeatherMood
         """
 
-        log.debug(f'Creating WeatherMood object from row with id {row["id"]}')
+        log.debug(f"Creating WeatherMood object from row with id {row['id']}")
         return WeatherMood(
             # WeatherMood Specific
             id=row['id'],

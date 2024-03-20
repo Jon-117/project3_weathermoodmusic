@@ -26,18 +26,19 @@ def get_location(user_input) -> Location or None:
     :param user_input:      `str`: A city's name
     :return:                `Location` or `None` if city not found.
     """
-
     create_params(user_input)
     returned_data = request_nominatim()
     check_if_input_city = confirm_data(returned_data)
     if check_if_input_city:
-            result = format_data(check_if_input_city) 
+         result = format_data(check_if_input_city) 
     else:
-        raise ValueError('AddressType Error: User input is not a city.')
+        result = None
     if returned_data is None:
         log.error(f'City not found. Is "{user_input}" a valid city?')
         raise LocationError(f'City not found. Is "{user_input}" a valid city?')
-    if len(result) > 1:
+    if result == None:
+        return result
+    elif len(result) > 1:
         return ui.get_selection(result)
     elif len(result) == 1:
         return result[0]
@@ -45,8 +46,6 @@ def get_location(user_input) -> Location or None:
 
 def create_params(user_input):
     """ Creates the search string for the api to search"""
-    if user_input.isdigit():  # Prevents number input
-        raise ValueError("Input must be a city name not numbers.")
     log.debug(f'Assigning params for {user_input}')
     params.update({'city': f'{user_input}'})
     pass
@@ -132,4 +131,5 @@ class LocationError(Exception):
         self.message = message
         super().__init__(
             message)  # Remember, super() calls the parent's __init__ to inherit initialization properties. Also allows our custom exception to be caught by `except`
+
 

@@ -1,22 +1,40 @@
 import requests
 from pprint import pprint
+import unittest
+from unittest import TestCase
+
+import sys
+sys.path.append("..")
+from get_location_api import get_location
+
+
 
 params = {
-    'q': 'minneapolis',
+    'q': '',
     'format': 'json'
 }
 
+class Test_Nominatim_Api(TestCase):
 
-def test():
-    response = requests.get('https://nominatim.openstreetmap.org/search', params=params)
-    data = response.json()
-    for result in data:
-        name = result['name']
-        # print(name)
+    def test_good_response(self):
+        response = requests.get('https://nominatim.openstreetmap.org/search', params=params)
+        self.assertEqual(response.status_code, 200)
 
-    pprint(data)
+    def test_bad_response(self):
+        response = requests.get('https://nominatim.openstreetmap.org/search', params=params)
+        self.assertNotEqual(response.status_code, 404)
+   
+    def test_bad_input(self):
+        return_data = get_location('ASD')
+        self.assertIsNone(return_data) 
 
-test()
+    def test_return_data(self):
+        return_data = get_location('Minneapolis')
+        self.assertTrue(return_data)
+
+
+if __name__ == '__main__':
+    unittest.main()
 
 
 """
